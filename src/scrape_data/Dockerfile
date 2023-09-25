@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y \
 # Install Python packages via pip
 RUN pip install --no-cache-dir \
     selenium \
-    torch \
-    transformers \
-    requests
+    csv \
+    time \
+    re
 
 # Set up the Chrome WebDriver for Selenium
 ENV CHROME_DRIVER_PATH=/usr/lib/chromium/chromedriver
