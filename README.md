@@ -7,36 +7,37 @@ Project Organization
 ------------
       ├── LICENSE
       ├── README.md
-      ├── notebooks
-      ├── references
       ├── requirements.txt
-      ├── setup.py
       └── src
-            ├── preprocessing
+            ├── scrape_data
             │   ├── Dockerfile
-            │   ├── preprocess.py
+            │   ├── scrape_candidates.py
             │   └── requirements.txt
-            └── validation
+            └── clean_and_label
                   ├── Dockerfile
-                  ├── cv_val.py
+                  ├── label_candidates.py
                   └── requirements.txt
 
 
 --------
-# AC215 - Milestone2 - ButterFlyer
+# AC215 - Milestone2 - Last Night Today
 
 **Team Members**
-Pavlov Protovief, Paolo Primopadre and Pablo El Padron
+Luke Stoner, Evan Arnold, Andrew Sullivan, Johannes Portik
 
 **Group Name**
-Awesome Group
+LNT (Last Night Today)
 
 **Project**
-In this project we aim to develop an application that can identify various species of butterflies in the wild using computer vision and offer educational content through a chatbot interface.
+This project aims to scrape closed caption data from TV news programs via the Internet Archive and create a website that provides a snapshot of the previous night's news. Specifically, we aim to capture the overall sentiment of various networks, along with sentiment toward current presidential candidates. Additionally, we aim to train an LLM to complete summarization tasks given clips from each night's news.
 
 ### Milestone2 ###
 
-We gathered dataset of 1M butterflies representing 17K species. Our dataset comes from following sources - (1),(2),(3) with approx 100GB in size. We parked our dataset in a private Google Cloud Bucket. 
+For this milestone we wrote initial dockerfiles and scripts to complete our data collection and preprocessing tasks. 
+
+For data collection, we scrape captions from the internet archive (via scrape_candidates.py) for each presidential candidate and store the scraped text, along with date and network, to an output csv file. 
+
+Next, the csv files are passed into label_candidates.py to be cleaned and provided a sentiment label. The text is shortened from ~200 words to between 50 and 100 words, terminating at the end of a sentence to capture proper context. The full scraped captions were too long and later portions typically did not relate to our desired candidate. Once cleaned, each caption is provided a basic sentiment label (0: Negative, 1: Neutral, 2: Positive) via NLTK's VADER. These labels will later be used to fine tune our pretrained BERT sentiment classifier.
 
 **Preprocess container**
 - This container reads 100GB of data and resizes the image sizes and stores it back to GCP
