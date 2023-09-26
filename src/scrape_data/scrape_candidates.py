@@ -1,8 +1,14 @@
+
+from google.cloud import storage
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 import csv
 import re
+import pandas as pd
+import os
+
+
 
 #Initialize driver
 url = 'https://archive.org/details/tv'
@@ -11,7 +17,7 @@ driver = webdriver.Chrome(options=options)
 
 #define start/end dates for search
 start_date = '2023-09-17'
-end_date = '2023-09-22'
+end_date = '2023-09-20'
 
 #import candidates
 candidates = []
@@ -20,10 +26,13 @@ with open('candidates.csv', 'r', newline='') as infile:
     for line in lines:
         candidates.append(line)
 
-for candidate in candidates:
+mentions = []
+
+for candidate in candidates[1:4]:
     #set candidate name and state
     first = candidate[0].strip('\ufeff')
     last = candidate[1]
+    party = candidate[2]
 
     #set search url
     full_url = f'https://archive.org/details/tv?q="{first}+{last}"&and%5B%5D=publicdate%3A%5B{start_date}+TO+{end_date}%5D&page=1'
@@ -47,9 +56,6 @@ for candidate in candidates:
         else:
             at_bottom += 1
 
-    #create list to store candidate mentions
-    mentions = []
-
     #iterate through results
     results = results[1:]
     for result in results: 
@@ -67,10 +73,32 @@ for candidate in candidates:
         clean_text = re.sub(r'\[.*?\]', '', clean_text)
 
         #create list of network, date, text and append it to mention list
-        entry = [network, date, clean_text]
+        entry = [first, last, party, network, date, clean_text]
         mentions.append(entry)
 
-    #write all mentions to output file
-    """
-    TODO: export all candidate mentions to an output file on google cloud
-    """
+
+        
+
+#write all mentions to output file
+"""
+TODO: export all candidate mentions to an output file on google cloud
+"""
+
+outfilepath = f'unlabeled.csv'
+with open(outfilepath, 'w', newline='') as outfile:
+    csv_writer = csv.writer(outfile)
+    for entry in mentions:
+        csv_writer.writerow(entry)
+
+
+#upload csv to GCP
+##create GCP Client
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/andrewsullivan/Desktop/ac215-400221-4d622ff5cd5c.json"
+
+storage_client = storage.Client()
+bucket_name = "milestone2bucket"
+
+bucket = storage_client.bucket(bucket_name)
+blob = bucket.blob(outfilepath)
+blob.upload_from_filename(outfilepath)
+
