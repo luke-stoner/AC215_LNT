@@ -1,4 +1,3 @@
 selenium
-time
-csv
-re
+pandas
+google-cloud-storage

@@ -1,4 +1,3 @@
 nltk
-re
-csv
-os
+pandas
+google-cloud-storage
