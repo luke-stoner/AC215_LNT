@@ -35,7 +35,7 @@ This project aims to scrape closed caption data from TV news programs via the In
 
 For this milestone we wrote initial dockerfiles and scripts to complete our data collection and preprocessing tasks. 
 
-For data collection, we scrape captions from the internet archive (via scrape_candidates.py) for each presidential candidate and store the scraped text, along with date and network, to an output csv file. 
+For data collection, we scrape captions from the internet archive (via scrape_candidates.py) for each presidential candidate and store the scraped text, along with date and network, to an output csv file. For future milestones, we will streamline our scraping via an API solution rather than raw scraping to conserve resources. While the current solution is operable and works well on a local machine, we need a more feasible solution within a container on GCP.
 
 Next, the csv files are passed into label_candidates.py to be cleaned and provided a sentiment label. The text is shortened from ~200 words to between 50 and 100 words, terminating at the end of a sentence to capture proper context. The full scraped captions were too long and later portions typically did not relate to our desired candidate. Once cleaned, each caption is provided a basic sentiment label (0: Negative, 1: Neutral, 2: Positive) via NLTK's VADER. These labels will later be used to fine tune our pretrained BERT sentiment classifier.
 
