@@ -50,7 +50,6 @@ Next, the csv file is passed into label_candidates.py to be cleaned and provided
 
 (3) `Dockerfile` 
 
-
 **clean_and_label container**
 - Cleans and labels scraped text
 - Input to this container is the unlabeled.csv file from the scrape_data container
@@ -63,3 +62,7 @@ Next, the csv file is passed into label_candidates.py to be cleaned and provided
 (3) `src/validation/Dockerfile`
 
 
+**Data Versioning Plan**
+Moving forward, we will save our scraped and processed data into two seperate files.
+- First, the data will be saved into its own unique file based on the date of scraping (ex: `unlabled_09-26-2023.csv` and `labeled_09-26-2023.csv`). These files will only be produced once and have one version.
+- Additionally, the newly scraped data will be added to a master file of scraped and labeled captions (`unlabeled.csv` and `labeled.csv`) that will update dynamically. Here, we create a new version of each file each time it is updated.
