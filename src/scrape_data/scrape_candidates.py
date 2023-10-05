@@ -1,14 +1,10 @@
-
 from google.cloud import storage
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 import csv
 import re
-import pandas as pd
 import os
-
-
 
 #Initialize driver
 url = 'https://archive.org/details/tv'
@@ -28,7 +24,7 @@ with open('candidates.csv', 'r', newline='') as infile:
 
 mentions = []
 
-for candidate in candidates[1:4]:
+for candidate in candidates:
     #set candidate name and state
     first = candidate[0].strip('\ufeff')
     last = candidate[1]
@@ -80,10 +76,6 @@ for candidate in candidates[1:4]:
         
 
 #write all mentions to output file
-"""
-TODO: export all candidate mentions to an output file on google cloud
-"""
-
 outfilepath = f'unlabeled.csv'
 with open(outfilepath, 'w', newline='') as outfile:
     csv_writer = csv.writer(outfile)
@@ -96,7 +88,7 @@ with open(outfilepath, 'w', newline='') as outfile:
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/andrewsullivan/Desktop/ac215-400221-4d622ff5cd5c.json"
 
 storage_client = storage.Client()
-bucket_name = "milestone2bucket"
+bucket_name = "milestone3bucket"
 
 bucket = storage_client.bucket(bucket_name)
 blob = bucket.blob(outfilepath)

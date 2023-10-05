@@ -2,6 +2,18 @@ import torch
 from torch.nn.functional import softmax
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import os
+from google.cloud import storage 
+
+##create GCP Client
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/andrewsullivan/Desktop/ac215-400221-4d622ff5cd5c.json"
+source_filename = f'output/initial_labels.csv'
+storage_client = storage.Client()
+bucket_name = "milestone3bucket"
+bucket = storage_client.bucket(bucket_name)
+in_file = bucket.blob(source_filename)
+# Download the file from GCS to your local machine
+in_file.download_to_filename(source_filename)
 
 #initialize tokenizer and BERT model
 model_name = "output/sentiment_finetuned_model"
@@ -43,4 +55,8 @@ df['positive_score'] = positive_scores
 df['predicted_sentiment'] = predicted_labels
 
 #export dataframe to csv
-df.to_csv('output/date.csv', index=False)
+#export dataframe to csv
+outfilepath = f'output/final_labels.csv'
+out_file = bucket.blob(outfilepath)
+df.to_csv(out_file, index=False)
+out_file.upload_from_filename(outfilepath)
