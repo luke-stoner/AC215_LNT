@@ -1,5 +1,17 @@
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments, DataCollatorWithPadding
 import pandas as pd
+import os
+from google.cloud import storage 
+
+##create GCP Client
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/andrewsullivan/Desktop/ac215-400221-4d622ff5cd5c.json"
+source_filename = f'output/initial_labels.csv'
+storage_client = storage.Client()
+bucket_name = "milestone3bucket"
+bucket = storage_client.bucket(bucket_name)
+in_file = bucket.blob(source_filename)
+# Download the file from GCS to your local machine
+in_file.download_to_filename(source_filename)
 
 # Load the pre-trained model and tokenizer
 model_name = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
