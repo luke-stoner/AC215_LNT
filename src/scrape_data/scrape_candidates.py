@@ -1,49 +1,64 @@
 from google.cloud import storage
+import os, re, time
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import time
-import csv
-import re
-import os
 
-#Initialize driver
-url = 'https://archive.org/details/tv'
-options = webdriver.ChromeOptions()
-driver = webdriver.Chrome(options=options)
+def clean_text(text: str, max_words: int=100):
+    '''
+    Remove irrelevant characters and clip text at 50 words at the next sentence.
 
-#define start/end dates for search
-start_date = '2023-09-17'
-end_date = '2023-09-20'
+    Input:
+    - text: str = input text from Internet Archive.
+    - max_words: int = maximum number of words to consider if text contains more than max_words words.
 
-#import candidates
-candidates = []
-with open('candidates.csv', 'r', newline='') as infile:
-    lines = csv.reader(infile)
-    for line in lines:
-        candidates.append(line)
+    Output:
+    - str = Cleaned and clipped text.
+    '''
+    # remove irrelevant characters
+    text = text.replace('\'', '')
+    text = text.replace('>', '')
+    text = re.sub(r'\[.*?\]', '', text)
 
-mentions = []
+    # clip text at 50 words to the next complete sentence
+    words = text.split()
+    n_words = len(words)
+    if n_words <= 50:
+        return text
+    else:
+        for i in range(50, min(n_words, max_words)):
+            punc = bool(re.search(r'[.!?]', words[i]))
+            if not punc is False:
+                break
+        return(' '.join(words[:i+1]))
 
-for candidate in candidates:
-    #set candidate name and state
-    first = candidate[0].strip('\ufeff')
-    last = candidate[1]
-    party = candidate[2]
+def fetch_results(first_name: str, last_name: str):
+    '''
+    Gathers results about candidate from Internet Archive.
 
-    #set search url
-    full_url = f'https://archive.org/details/tv?q="{first}+{last}"&and%5B%5D=publicdate%3A%5B{start_date}+TO+{end_date}%5D&page=1'
+    Input:
+    - first_name: str = candidate's first name.
+    - last_name: str = candidate's last name.
+    '''
+    # initialize driver
+    # options = webdriver.ChromeOptions()
+    # driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome()
 
-    #get webpage
-    driver.get(full_url)
+    # internet archive url
+    url = f'https://archive.org/details/tv?q="{first_name}+{last_name}"&and%5B%5D=publicdate%3A%5B{START_DATE}+TO+{END_DATE}%5D&page=1'
 
-    #create list of all results on page
+    # webpage
+    driver.get(url)
+
+    # list results on page
     results = driver.find_elements(By.CLASS_NAME, 'item-ia.hov')
 
-    #scroll to bottom of webpage to access all results
+    # scroll to bottom of webpage to prompt infinite scrolling and append further results
     at_bottom = 0
     len_old_results = 0
-    while at_bottom < 3:
-        time.sleep(5)
+    while at_bottom < 3: # 3 tries to generate more results to accomate for slow load times
+        time.sleep(5) # load time for each scroll attempt
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         len_old_results = len(results)
         results = driver.find_elements(By.CLASS_NAME, 'item-ia.hov')
@@ -52,45 +67,85 @@ for candidate in candidates:
         else:
             at_bottom += 1
 
-    #iterate through results
-    results = results[1:]
-    for result in results: 
-        #get network aired on
-        network = result.find_element(By.CLASS_NAME, 'byv').text
+    # drop first result (metadata)
+    return results[1:]
 
-        #get date
-        link = result.get_attribute('data-id')
-        date = link.split('_')[1]
+def upload_to_GCP(file_path: str):
+    '''
+    Upload local file to GCP data bucket.
 
-        #get relevant text and clean it
-        text = result.find_element(By.CLASS_NAME, 'sin-detail').text
-        clean_text = text.replace('\'', '')
-        clean_text = clean_text.replace('>', '')
-        clean_text = re.sub(r'\[.*?\]', '', clean_text)
+    Input:
+    file_path: str = path to file to upload.
+    '''
+    # load credentials
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "secrets/GCP_secrets.json"
 
-        #create list of network, date, text and append it to mention list
-        entry = [first, last, party, network, date, clean_text]
-        mentions.append(entry)
+    # connect to GCP
+    bucket_name = 'data'
+    bucket_path = 'raw/unlabeled.csv'
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
 
+    # upload CSV to bucket
+    blob = bucket.blob(bucket_path)
+    blob.upload_from_filename(file_path)
 
-        
+def scrape():
+    '''
+    Scrape Internet Archive mentions between START_DATE and END_DATE for all candidates in candidates.csv.
+    
+    Output:
+    - pd.DataFrame = data frame of results; each row represents one mention of one candidate.
+    '''
+    # read list of candidates
+    candidates_df = pd.read_csv('candidates.csv', names=['first_name', 'last_name', 'party'])
 
-#write all mentions to output file
-outfilepath = f'unlabeled.csv'
-with open(outfilepath, 'w', newline='') as outfile:
-    csv_writer = csv.writer(outfile)
-    for entry in mentions:
-        csv_writer.writerow(entry)
+    # fetch data from Internet Archive
+    mentions = []
+    for _, row in candidates_df.iterrows():
+        # candidate parameters
+        first_name = row['first_name']
+        last_name = row['last_name']
+        party = row['party']
 
+        # fetch results from internet archive
+        results = fetch_results(first_name, last_name)
 
-#upload csv to GCP
-##create GCP Client
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/andrewsullivan/Desktop/ac215-400221-4d622ff5cd5c.json"
+        for result in results: 
+            # extract mention host network
+            network = result.find_element(By.CLASS_NAME, 'byv').text
 
-storage_client = storage.Client()
-bucket_name = "milestone3bucket"
+            # extract mention date
+            link = result.get_attribute('data-id')
+            date = link.split('_')[1]
 
-bucket = storage_client.bucket(bucket_name)
-blob = bucket.blob(outfilepath)
-blob.upload_from_filename(outfilepath)
+            # extract mention text
+            text = result.find_element(By.CLASS_NAME, 'sin-detail').text
+            text = clean_text(text) 
 
+            # append mention to dataframe
+            mentions.append({
+                'first_name': first_name,
+                'last_name': last_name,
+                'party': party,
+                'network': network,
+                'date': date,
+                'text': text
+            })
+
+    # format as data frame
+    mentions_df = pd.DataFrame(mentions)
+    
+    # save to disk
+    outfilepath = 'unlabeled.csv'
+    mentions_df.to_csv(outfilepath)
+    
+    # upload to GCP
+    upload_to_GCP(outfilepath)
+    return mentions_df
+
+if __name__ == '__main__':
+    START_DATE = '2023-09-17'
+    END_DATE = '2023-09-20'
+
+    mentions_df = scrape()
