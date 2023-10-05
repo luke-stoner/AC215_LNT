@@ -78,7 +78,7 @@ def upload_to_GCP(file_path: str):
     file_path: str = path to file to upload.
     '''
     # load credentials
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "secrets/GCP_secrets.json"
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = "/secrets/credentials.json"
 
     # connect to GCP
     bucket_name = 'data'
