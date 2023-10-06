@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from google.cloud import storage 
+import io
 
 ##create GCP Client
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/lu31635/Desktop/AC215/ac215.json"
@@ -13,7 +14,8 @@ source_filename = 'processed/initial_labels.csv'
 storage_client = storage.Client()
 data_bucket = storage_client.bucket('data-lnt')
 models_bucket = storage_client.bucket('models-lnt')
-in_file = data_bucket.blob(source_filename)
+blob = data_bucket.blob(source_filename)
+content = blob.download_as_text()
 
 def get_model(model_directory):
     """
@@ -205,7 +207,7 @@ except:
 tokenizer, model = get_model(model_directory)
 
 # Import labeled dataset 
-initial_df = pd.read_csv(in_file)
+initial_df = pd.read_csv(io.StringIO(content))
 
 # Filter high-confidence examples based on predicted sentiment scores
 high_confidence_df = get_high_confidence_df(initial_df, 0.9)

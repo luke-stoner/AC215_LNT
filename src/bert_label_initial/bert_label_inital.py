@@ -4,14 +4,16 @@ from torch.nn.functional import softmax
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import os
-from google.cloud import storage 
+from google.cloud import storage
+import io
 
 #create GCP Client
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/lu31635/Desktop/AC215/ac215.json"
-source_filename = 'raw/labeled.csv'
 storage_client = storage.Client()
-bucket = storage_client.bucket('data')
-in_file = bucket.blob(source_filename)
+bucket = storage_client.bucket('data-lnt')
+source_filename = 'raw/unlabeled.csv'
+blob = bucket.blob(source_filename)
+content = blob.download_as_text()
 
 def get_model(model_name):
     """
@@ -84,7 +86,7 @@ def save_dataset(df, outfilepath):
 
 
 #import unlabeled dataset into dataframe
-df = pd.read_csv(in_file)
+df = pd.read_csv(io.StringIO(content), names= ['first', 'last', 'party', 'network', 'date', 'text'])
 
 #define BERT model and tokenized text
 tokenizer, model = get_model("cardiffnlp/twitter-xlm-roberta-base-sentiment")
