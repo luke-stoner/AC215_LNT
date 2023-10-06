@@ -3,6 +3,59 @@ AC215-Template (Final Milestone)
 
 For Milestone 2 - See branch `milestone2`
 
+GitHub File Structure:
+------------
+      ├── LICENSE
+      ├── README.md
+      ├── requirements.txt
+      └── src
+            ├── scrape_data              
+            │   ├── Dockerfile
+            │   ├── scrape_candidates.py
+            │   └── requirements.txt
+            └── bert_label_initial
+            │   ├── Dockerfile
+            │   ├── bert_label_initial.py
+            │   └── requirements.txt
+            └── bert_train
+                ├── Dockerfile
+                ├── bert_fine_tune.py
+                └── requirements.txt
+                
+**scrape_data container**
+- Scrapes desired data from Internet Archive and cleans/crops text to desired length
+- Input to this container is a candidates.csv file listing each presidential candidate
+- Output from this container is a csv file titled 'raw/unlabled.csv' stored in the data bucket on GCP
+
+(1) `scrape_candidates.py` - Runs data scraping through selenium and cleans/crops text
+
+(2) `requirements.txt` 
+
+(3) `Dockerfile` 
+
+**bert_label_initial container**
+- Uses pretrained BERT model 'cardiffnlp/twitter-xlm-roberta-base-sentiment' to provide initial label to unlabeled data
+- Input to this container is the unlabeled.csv file from the scrape_data container
+- Output from this container is a csv file titled 'processed/labeled_initial.csv' in our GCP data bucket
+  
+(1) `bert_label_initial.py` - Takes unlabeled data are provides an initial sentiment label through pretrained BERT model
+
+(2) `requirements.txt` 
+
+(3) `src/validation/Dockerfile`
+
+**bert_label_final container**
+- Fine tunes the pretrained BERT model through high confidence samples, then uses the fine tuned model to provide final sentiment label
+- Input to this container is the labeled_initial.csv file from the bert_label_initial container
+- Output from this container is first a csv file titled 'processed/labeled_final.csv' in our GCP data bucket, as well as the saved final model 'fine_tune_label' in our models bucket on GCP
+  
+(1) `bert_label_initial.py` - Takes unlabeled data are provides an initial sentiment label through pretrained BERT model
+
+(2) `requirements.txt` 
+
+(3) `src/validation/Dockerfile`
+
+
 GCP Bucket Structure:
 ------------
     ├── milestone2bucket                   #Archived bucket with milestone 2 deliverables
