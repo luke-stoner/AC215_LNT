@@ -14,7 +14,8 @@ GCP Bucket Structure:
             ├── raw                        #directory for unprocessed data
                 └── unlabeled.csv
             └── processed                  #directory to store processed results from model
-                └── labeled.csv
+                └── labeled_initial.csv
+                └── labeled_final.csv
                 └── summaries.csv
 
 --------
@@ -34,6 +35,8 @@ GCP Bucket Structure:
 
 (1) `raw/unlabeled.csv` - Unlabeled data (updated weekly) to be passed into `fine_tune_label` model
 
-(2) `processed/labeled.csv` - Labeled data (updated weekly) derived from `fine_tune_label` model
+(2) `processed/labeled_initial.csv` - Initial labeled data from pretrained BERT model (updated weekly) derived from `bert_label` model
 
-(3) `summaries.csv` - Candidate summaries (updated weekly) derived from `bert_summarize` model
+(3) `processed/labeled_final.csv` - Final labeled data from fine-tuned BERT model (updated weekly) derived from `fine_tune_label` model
+
+(4) `processed/summaries.csv` - Candidate summaries (updated weekly) derived from `bert_summarize` model
