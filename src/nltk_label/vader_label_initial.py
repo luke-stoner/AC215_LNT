@@ -5,13 +5,11 @@ import io
 from google.cloud import storage
 
 # Declare global variables
-GCP_KEY = '/home/jupyter/secrets/ac215.json'
 GCP_DATA_BUCKET = 'data-lnt'
 GCP_SOURCE_FILENAME = 'raw/unlabeled.csv'
 OUTPUT_FILEPATH = 'processed/vader_labeled_initial.csv'
 
 #create GCP Client
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GCP_KEY
 storage_client = storage.Client()
 bucket = storage_client.bucket(GCP_DATA_BUCKET)
 source_filename = GCP_SOURCE_FILENAME
