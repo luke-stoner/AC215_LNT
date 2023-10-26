@@ -1,17 +1,21 @@
 #import necessary libraries 
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW, BertForSequenceClassification, BertTokenizer
 import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
+from torch.nn.functional import softmax
 from google.cloud import storage 
 import io
 import tempfile
+import shutil
 from tqdm import tqdm
+import wandb
 
 # Declare global variables
 GCP_KEY = '/home/jupyter/secrets/ac215.json'
+WANDB_FILE = '/home/jupyter/secrets/wandb.txt'
 GCP_DATA_BUCKET = 'data-lnt'
 GCP_MODELS_BUCKET = 'models-lnt'
 GCP_SOURCE_FILENAME = 'processed/vader_labeled_initial.csv'
@@ -19,9 +23,10 @@ MODEL_SPECIFICATION = "cardiffnlp/twitter-xlm-roberta-base-sentiment"
 OUTPUT_FILEPATH = 'processed/labeled.csv'
 MODEL_DIR_FINETUNE = 'fine_tune_label'
 
-HIGH_CONFIDENCE_THRESHOLD = 0.9
+HIGH_CONFIDENCE_THRESHOLD = 0.7
 TEST_SIZE = 0.2
-NUMBER_EPOCHS = 1
+INITIAL_EPOCHS = 1
+FINAL_EPOCHS = 1
 RANDOM_STATE = 215
 ADAM_LEARNING_RATE = 1e-5
 ADAM_BATCH_SIZE = 32
@@ -44,6 +49,29 @@ else:
     # If no GPU is available, use the CPU
     device = torch.device("cpu")
 
+# Print the device being used
+print(f"Using device: {device}")
+
+# login to weights and biases
+with open(WANDB_FILE, 'r') as file:
+    WANDB_KEY = file.read()
+    
+wandb.login(key=WANDB_KEY)
+
+# start a new wandb run to track this script
+wandb.init(
+    # set the wandb project where this run will be logged
+    project="lnt-bert",
+    
+    # track hyperparameters and run metadata
+    config={
+    "learning_rate": ADAM_LEARNING_RATE,
+    "architecture": "BERT",
+    "dataset": GCP_SOURCE_FILENAME,
+    "epochs": FINAL_EPOCHS,
+    }
+)
+
 def get_model(model_name):
     """
     Input: model_name (name of desired BERT model)
@@ -57,7 +85,6 @@ def get_model(model_name):
 
     return tokenizer, model
 
-
 def tokenize(dataframe):
     """
     Input: Pandas dataframe (assumes text column = 'text')
@@ -70,7 +97,6 @@ def tokenize(dataframe):
     tokenized_texts = tokenizer(text_samples, padding=True, return_tensors='pt')
 
     return tokenized_texts
-
 
 def get_datasets(df, labels, tokenizer, test_size=TEST_SIZE):
     """
@@ -99,8 +125,7 @@ def get_datasets(df, labels, tokenizer, test_size=TEST_SIZE):
 
     return train_dataset, valid_dataset
 
-
-def train_initial(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPOCHS, patience=5):
+def train_initial(model, train_dataset, valid_dataset, device, epochs=INITIAL_EPOCHS, patience=5):
     """
     Fine tunes the pretrained BERT model based on the provided labeled datasets
 
@@ -118,11 +143,12 @@ def train_initial(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPO
     # Train loop
     optimizer = AdamW(model.parameters(), lr=ADAM_LEARNING_RATE)
     train_loader = DataLoader(train_dataset, batch_size=ADAM_BATCH_SIZE, shuffle=True)
-    num_batches = round((len(train_dataset) / ADAM_BATCH_SIZE) * .25)
+    num_batches = round((len(train_dataset) / ADAM_BATCH_SIZE) * .05)
     batches_trained = 0
     
     for epoch in range(epochs):
         model.train()
+        
         for batch in train_loader:
             input_ids, attention_mask, labels = batch
             input_ids, attention_mask, labels = input_ids.to(device), attention_mask.to(device), labels.to(device)
@@ -133,6 +159,7 @@ def train_initial(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPO
             optimizer.step()
             optimizer.zero_grad()
             batches_trained += 1
+            
             if batches_trained > num_batches:
                 break
 
@@ -159,6 +186,8 @@ def train_initial(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPO
             accuracy = correct / total
             average_loss = total_loss / len(valid_loader)
 
+            print(f'Epoch {epoch + 1}/{epochs}: Validation Loss: {average_loss:.4f}, Validation Accuracy: {accuracy:.4f}')
+
             # Check for early stopping
             if average_loss < best_loss:
                 best_loss = average_loss
@@ -167,7 +196,10 @@ def train_initial(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPO
                 no_improvement += 1
 
             if no_improvement >= patience:
+                print(f'Early stopping after {epoch + 1} epochs without improvement.')
                 break  # Stop training
+
+    print("Training completed.")
 
 
 def label(tokenized_texts, model, device, dataframe, batch_size=64):
@@ -195,9 +227,6 @@ def label(tokenized_texts, model, device, dataframe, batch_size=64):
     #create empty list to store labels for entire dataset
     labels = []
     
-    #create a progress bar to track labeling process
-    progress_bar = tqdm(total=len(dataloader), desc="Labeling")
-    
     for batch_input_ids, batch_attention_mask in dataloader:
         with torch.no_grad():
             outputs = model(batch_input_ids, attention_mask=batch_attention_mask)
@@ -208,9 +237,6 @@ def label(tokenized_texts, model, device, dataframe, batch_size=64):
         #append batch labels to dataset label list
         batch_labels = torch.softmax(logits, dim=1)
         labels.append(batch_labels)
-        
-        #update progress bar
-        progress_bar.update(1)
         
     #concatenate all labels
     labels = torch.cat(labels, dim=0)
@@ -233,8 +259,7 @@ def label(tokenized_texts, model, device, dataframe, batch_size=64):
     dataframe['neutral_score'] = neutral_scores
     dataframe['positive_score'] = positive_scores
     dataframe['label'] = sentiment
-
-
+    
 def get_high_confidence_df(df, threshold=HIGH_CONFIDENCE_THRESHOLD):
     """
     Filters an input dataframe to only include samples with label confidence above a defined threshold
@@ -250,7 +275,7 @@ def get_high_confidence_df(df, threshold=HIGH_CONFIDENCE_THRESHOLD):
     (df['positive_score'] > threshold)]
 
 
-def train_final(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPOCHS):
+def train_final(model, train_dataset, valid_dataset, device, epochs=FINAL_EPOCHS):
     """
     Fine tunes the pretrained BERT model based on the high confidence samples
 
@@ -266,6 +291,7 @@ def train_final(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPOCH
     train_loader = DataLoader(train_dataset, batch_size=ADAM_BATCH_SIZE, shuffle=True)
     for epoch in range(epochs):
         model.train()
+    
         for batch in train_loader:
             input_ids, attention_mask, labels = batch
             input_ids, attention_mask, labels = input_ids.to(device), attention_mask.to(device), labels.to(device)
@@ -276,26 +302,33 @@ def train_final(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPOCH
             optimizer.step()
             optimizer.zero_grad()
 
-    # Validation loop
-    valid_loader = DataLoader(valid_dataset, batch_size=ADAM_BATCH_SIZE)
-    model.eval()
-    with torch.no_grad():
-        total_loss = 0.0
-        correct = 0
-        total = 0
-        for batch in valid_loader:
-            input_ids, attention_mask, labels = batch
-            input_ids, attention_mask, labels = input_ids.to(device), attention_mask.to(device), labels.to(device)
+        # Validation loop
+        valid_loader = DataLoader(valid_dataset, batch_size=ADAM_BATCH_SIZE)
+        model.eval()
+        with torch.no_grad():
+            total_loss = 0.0
+            correct = 0
+            total = 0
+            for batch in valid_loader:
+                input_ids, attention_mask, labels = batch
+                input_ids, attention_mask, labels = input_ids.to(device), attention_mask.to(device), labels.to(device)
 
-            outputs = model(input_ids, attention_mask=attention_mask)
-            logits = outputs.logits
-            loss = torch.nn.functional.cross_entropy(logits, labels)
-            total_loss += loss.item()
+                outputs = model(input_ids, attention_mask=attention_mask)
+                logits = outputs.logits
+                loss = torch.nn.functional.cross_entropy(logits, labels)
+                total_loss += loss.item()
 
-            _, predicted = torch.max(logits, 1)
-            correct += (predicted == labels).sum().item()
-            total += labels.size(0)
+                _, predicted = torch.max(logits, 1)
+                correct += (predicted == labels).sum().item()
+                total += labels.size(0)
 
+            accuracy = correct / total
+            average_loss = total_loss / len(valid_loader)
+            
+
+            # log metrics to wandb
+            wandb.log({"acc": accuracy, "loss": average_loss})
+            print(f'Epoch {epoch + 1}/{epochs}: Validation Loss: {average_loss:.4f}, Validation Accuracy: {accuracy:.4f}')
 
 def save_dataset(df, outfilepath):
     """
@@ -313,7 +346,6 @@ def save_dataset(df, outfilepath):
     #upload the CSV string to GCP
     blob = bucket.blob(outfilepath)
     blob.upload_from_string(csv_string)
-
 
 def save_model(output_directory, models_bucket, model, tokenizer):
     """
@@ -344,8 +376,7 @@ def save_model(output_directory, models_bucket, model, tokenizer):
                 gcs_path = f'{output_directory}/{os.path.relpath(file_path, start=temp_dir)}'
                 blob = bucket.blob(gcs_path)
                 blob.upload_from_filename(file_path)
-
-
+                
 #import VADER labeled dataset into dataframe
 VADER_df = pd.read_csv(io.StringIO(content))
 VADER_df = VADER_df.dropna()
@@ -358,7 +389,7 @@ tokenized_texts = tokenize(VADER_df)
 train_data_VADER, valid_data_VADER = get_datasets(VADER_df, 'vader_label', tokenizer, TEST_SIZE)
 
 #fine-tune the BERT model based on VADER labels
-train_initial(model, train_data_VADER, valid_data_VADER, device, epochs=NUMBER_EPOCHS, patience=PATIENCE)
+train_initial(model, train_data_VADER, valid_data_VADER, device, epochs=INITIAL_EPOCHS, patience=PATIENCE)
 
 #label the initial dataframe based on newly trained BERT model
 label(tokenized_texts, model, device, VADER_df, batch_size=LABEL_BATCH_SIZE)
@@ -370,7 +401,7 @@ high_confidence_df = get_high_confidence_df(VADER_df)
 train_data_BERT, valid_data_BERT = get_datasets(high_confidence_df, 'label', tokenizer, TEST_SIZE)
 
 #fine-tune the BERT model based on VADER labels
-train_final(model, train_data_BERT, valid_data_BERT, device, epochs=NUMBER_EPOCHS)
+train_final(model, train_data_BERT, valid_data_BERT, device, epochs=FINAL_EPOCHS)
 
 #create final dataframe to store scores and labels
 final_df = VADER_df
@@ -378,9 +409,11 @@ final_df = VADER_df
 #label the initial dataframe based on newly trained BERT model
 label(tokenized_texts, model, device, final_df, batch_size=LABEL_BATCH_SIZE)
 
+#finish weights and biases
+wandb.finish()
+
 #save final dataset
 save_dataset(final_df, OUTPUT_FILEPATH)
 
 #save the fine-tuned model to GCP
 save_model(MODEL_DIR_FINETUNE, GCP_MODELS_BUCKET, model, tokenizer)
-
