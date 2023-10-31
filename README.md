@@ -1,7 +1,7 @@
-AC215-Template (Milestone 3)
+AC215-Template (Milestone 4)
 ==============================
 
-For Milestone 2 - See branch `milestone2`
+For Milestone 3 - See branch `milestone2`
 
 GitHub File Structure:
 ------------
