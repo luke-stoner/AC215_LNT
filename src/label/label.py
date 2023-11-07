@@ -1,31 +1,33 @@
 #import necessary libraries 
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from torch.nn.functional import softmax
+from torch.optim import AdamW
 from google.cloud import storage 
 import io
 import tempfile
 import wandb
 
 # Declare global variables
-GCP_KEY = '/home/jupyter/secrets/ac215.json'
 GCP_DATA_BUCKET = 'data-lnt'
 GCP_MODELS_BUCKET = 'models-lnt'
 GCP_SOURCE_FILENAME = 'raw/unlabeled.csv'
+GCP_HAND_LABEL_FILENAME = 'raw/hand_labeled.csv'
 MODEL_SPECIFICATION = "siebert/sentiment-roberta-large-english"
 OUTPUT_FILEPATH = 'processed/labeled.csv'
 MODEL_DIR_FINETUNE = 'fine_tune_label'
-WANDB_FILE = '/home/jupyter/secrets/wandb.txt'
+GCP_KEY = os.environ.get('GCP_KEY')
+WANDB_KEY = os.environ.get('WANDB_KEY')
 
 TEST_SIZE = 0.3
 NUMBER_EPOCHS = 10
 RANDOM_STATE = 215
 ADAM_LEARNING_RATE = 1e-5
-ADAM_BATCH_SIZE = 32
+ADAM_BATCH_SIZE = 16
 LABEL_BATCH_SIZE = 32
 PATIENCE = 5
 
@@ -33,9 +35,10 @@ PATIENCE = 5
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GCP_KEY
 storage_client = storage.Client()
 bucket = storage_client.bucket(GCP_DATA_BUCKET)
-source_filename = GCP_SOURCE_FILENAME
-blob = bucket.blob(source_filename)
-content = blob.download_as_text()
+unlabeled_blob = bucket.blob(GCP_SOURCE_FILENAME)
+labeled_blob = bucket.blob(GCP_HAND_LABEL_FILENAME)
+unlabeled_content = unlabeled_blob.download_as_text()
+labeled_content = labeled_blob.download_as_text()
 
 # Check if a GPU is available
 if torch.cuda.is_available():
@@ -49,9 +52,6 @@ else:
 print(f"Using device: {device}")
 
 # login to weights and biases
-with open(WANDB_FILE, 'r') as file:
-    WANDB_KEY = file.read()
-    
 wandb.login(key=WANDB_KEY)
 
 # start a new wandb run to track this script
@@ -154,8 +154,7 @@ def train(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPOCHS, pat
         
         for batch in train_loader:
             input_ids, attention_mask, labels = batch
-            input_ids, attention_mask, labels = input_ids.to(device),
-            attention_mask.to(device), labels.to(device)
+            input_ids, attention_mask, labels = input_ids.to(device), attention_mask.to(device), labels.to(device)
 
             outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
             loss = outputs.loss
@@ -172,8 +171,7 @@ def train(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPOCHS, pat
             total = 0
             for batch in valid_loader:
                 input_ids, attention_mask, labels = batch
-                input_ids, attention_mask, labels = input_ids.to(device),
-                attention_mask.to(device), labels.to(device)
+                input_ids, attention_mask, labels = input_ids.to(device), attention_mask.to(device), labels.to(device)
 
                 outputs = model(input_ids, attention_mask=attention_mask)
                 logits = outputs.logits
@@ -187,8 +185,7 @@ def train(model, train_dataset, valid_dataset, device, epochs=NUMBER_EPOCHS, pat
             accuracy = correct / total
             average_loss = total_loss / len(valid_loader)
 
-            print(f'Epoch {epoch + 1}/{epochs}: Validation Loss: {average_loss:.4f},
-                  Validation Accuracy: {accuracy:.4f}')
+            print(f'Epoch {epoch + 1}/{epochs}: Validation Loss: {average_loss:.4f}, Validation Accuracy: {accuracy:.4f}')
 
             # Check for early stopping
             if average_loss < best_loss:
@@ -309,11 +306,11 @@ def save_model(output_directory, models_bucket, model, tokenizer):
                 blob.upload_from_filename(file_path)
 
 #import unlabeled dataset into dataframe
-unlabeled_df = pd.read_csv(io.StringIO(content))
+unlabeled_df = pd.read_csv(io.StringIO(unlabeled_content))
 unlabeled_df = unlabeled_df.dropna()
                   
 #import labeled dataset into dataframe
-labeled_df = pd.read_csv('labeled_sample.csv')
+labeled_df = pd.read_csv(io.StringIO(labeled_content))
 labeled_df = labeled_df.dropna()
                   
 #define BERT model and tokenized text for labeled df
