@@ -1,13 +1,19 @@
-from google.cloud import storage
-import os, re, time
-import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 
-# initialize driver
-# options = webdriver.ChromeOptions()
-# driver = webdriver.Chrome(options=options)
-driver = webdriver.Chrome()
+from google.cloud import storage
+import os
+import re
+import time
+import pandas as pd
+
+# Chrome options for headless mode
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+
+# Initialize driver in headless mode
+driver = webdriver.Chrome(options=chrome_options)
 
 def clean_text(text: str, first_name, last_name, max_words: int=100):
     '''
@@ -22,10 +28,8 @@ def clean_text(text: str, first_name, last_name, max_words: int=100):
     text = text.replace('>', '')
     text = re.sub(r'\[.*?\]', '', text)
 
-    # lowercase text and remove candidate name
+    # lowercase text and remove extra spaces
     text = text.lower()
-    text = text.replace(first_name.lower(), '')
-    text = text.replace(last_name.lower(), '')
     text = re.sub(' +',' ', text)
     
     # clip text at 50 words to the next complete sentence
