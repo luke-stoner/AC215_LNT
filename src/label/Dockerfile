@@ -40,9 +40,6 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
-# Set environment variables for GCP key and WandB API key
-ENV GCP_KEY ~/Users/lu31635/Desktop/AC215/secrets/ac215.json
-
 # Add the rest of the source code. This is done last so we don't invalidate all
 # layers when we change a line of code.
 ADD --chown=app:app . /app

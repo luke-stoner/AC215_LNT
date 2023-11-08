@@ -1,42 +1,54 @@
 # SCRAPE DATA DOCKERFILE
 FROM python:3.9-slim-buster
 
-# For additional security, the secrets are mounted only at runtime - this prevents secrets being stored and exposed in docker image
-# At runtime, a local folder is mounted into the docker image, using the -v command
-# Example:
-# docker run -v /file/location/locally/gcp_key.json:/container/destination/path/gcp_key.json -it imagename /bin/bash
-# docker run -v /Users/johannes/Desktop/ac215/secrets/gcp_key.json:/app/secrets/gcp_key.json -it imagename /bin/bash
-
-
-# Set environment variables
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Set a working directory
-WORKDIR /app
-
-# Copy your application code into the container
-COPY scrape_candidates.py /app/scrape_candidates.py
-COPY candidates.csv /app/candidates.csv
+# Copy the requirements.txt file to the image
 COPY requirements.txt /app/requirements.txt
 
-# Install necessary system packages
-RUN apt-get update && apt-get install -y \
-    wget \
-    unzip \
-    chromium \
-    chromium-driver \
-    && rm -rf /var/lib/apt/lists/*
+# Define a user 'app' and create the user's home directory
+RUN useradd -m -s /bin/bash app
 
-# Install Python packages via package manager
-RUN pip install --no-cache-dir -r requirements.txt
+# Set the working directory to /app and make it owned by the 'app' user
+WORKDIR /app
+RUN chown app:app /app
 
-# Set up the Chrome WebDriver for Selenium in Environment variables
-#ENV CHROME_DRIVER_PATH=/usr/lib/chromium/chromedriver
-#ENV CHROME_BIN_PATH=/usr/bin/chromium-browser
-#ENV PATH=$PATH:$CHROME_DRIVER_PATH
-ENV PATH /usr/lib/chromium/:$PATH
+# Prevent apt from showing prompts
+ENV DEBIAN_FRONTEND=noninteractive
 
+# Python wants UTF-8 locale
+ENV LANG=C.UTF-8
 
+# Tell pipenv where the shell is. This allows us to use "pipenv shell" as a
+# container entry point.
+ENV PYENV_SHELL=/bin/bash
+
+# Tell Python to disable buffering so we don't lose any logs.
+ENV PYTHONUNBUFFERED=1
+
+# Ensure we have an up to date baseline, install dependencies
+RUN set -ex; \
+    for i in $(seq 1 8); do mkdir -p "/usr/share/man/man${i}"; done && \
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends build-essential git curl wget unzip gzip software-properties-common apt-transport-https ca-certificates gnupg2 gnupg-agent curl openssh-client
+
+# Install chromedriver and its dependencies
+RUN apt-get install -y chromium-driver
+
+# Set the PATH environment variable
+ENV PATH="/usr/lib/chromium:$PATH"
+
+# Switch to the 'app' user
+USER app
+
+# Install packages specified in requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
+# Add the rest of the source code. This is done last so we don't invalidate all
+# layers when we change a line of code.
+ADD --chown=app:app . /app
 
 # Run the Python script
-CMD ["python", "./scrape_candidates.py"]
+CMD ["python", "./scrape.py"]
