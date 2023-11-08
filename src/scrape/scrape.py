@@ -8,7 +8,16 @@ import io
 import re
 import time
 import pandas as pd
+from datetime import datetime, timedelta
 GCP_KEY = os.environ.get('GCP_KEY')
+
+# Get the current date and time
+current_datetime = datetime.now()
+seven_days_ago = current_datetime - timedelta(days=7)
+
+# Set start and end date
+end_date = str(current_datetime.strftime('%Y-%m-%d'))
+start_date = str(seven_days_ago.strftime('%Y-%m-%d'))
 
 # Chrome options for headless mode
 chrome_options = Options()
@@ -167,6 +176,6 @@ def scrape():
 
 
 if __name__ == '__main__':
-    START_DATE = '2023-10-15'
-    END_DATE = '2023-10-22'
+    START_DATE = start_date
+    END_DATE = end_date
     mentions_df = scrape()
