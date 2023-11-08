@@ -1,12 +1,14 @@
+#import libraries and set GCP key
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-
 from google.cloud import storage
 import os
+import io
 import re
 import time
 import pandas as pd
+GCP_KEY = os.environ.get('GCP_KEY')
 
 # Chrome options for headless mode
 chrome_options = Options()
@@ -43,7 +45,8 @@ def clean_text(text: str, first_name, last_name, max_words: int=100):
             if not punc is False:
                 break
         return(' '.join(words[:i+1]))
-    
+
+
 def fetch_results(first_name: str, last_name: str):
     '''
     Gathers results about candidate from Internet Archive.
@@ -76,25 +79,37 @@ def fetch_results(first_name: str, last_name: str):
     # drop first result (metadata)
     return results[1:]
 
-def upload_to_GCP(file_path: str):
+
+def upload_to_GCP(df, file_path: str):
     '''
     Upload local file to GCP data bucket.
 
     Input:
+    df: pandas dataframe with candidate mentions
     file_path: str = path to file to upload.
     '''
     # load credentials
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = '/Users/lu31635/Desktop/AC215/ac215.json'
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = GCP_KEY
     
     # connect to GCP
     bucket_name = 'data-lnt'
     bucket_path = 'raw/unlabeled.csv'
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-    
-    # upload CSV to bucket
     blob = bucket.blob(bucket_path)
-    blob.upload_from_filename(file_path)
+
+    # get existing data from unlabeled.csv
+    content = blob.download_as_text()
+    unlabeled_df = pd.read_csv(io.StringIO(content))
+    unlabeled_df = unlabeled_df.dropna()
+
+    # concat existing data and new data
+    combined_df = pd.concat([unlabeled_df, df], ignore_index=True)
+
+    # upload CSV to bucket
+    csv_string = combined_df.to_csv(index=False)
+    blob.upload_from_string(csv_string)
+
 
 def scrape():
     '''
@@ -149,6 +164,7 @@ def scrape():
     # upload to GCP
     upload_to_GCP(outfilepath)
     return mentions_df
+
 
 if __name__ == '__main__':
     START_DATE = '2023-10-15'
