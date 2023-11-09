@@ -19,6 +19,10 @@ seven_days_ago = current_datetime - timedelta(days=7)
 end_date = str(current_datetime.strftime('%Y-%m-%d'))
 start_date = str(seven_days_ago.strftime('%Y-%m-%d'))
 
+# Create GCP client and set bucket name
+storage_client = storage.Client()
+bucket_name = 'data-lnt'
+
 # Chrome options for headless mode
 chrome_options = Options()
 chrome_options.add_argument("--headless")
@@ -26,9 +30,9 @@ chrome_options.add_argument("--headless")
 # Initialize driver in headless mode
 driver = webdriver.Chrome(options=chrome_options)
 
-def clean_text(text: str, first_name, last_name, max_words: int=100):
+def clean_text(text: str, max_words: int=100):
     '''
-    Remove irrelevant characters, candidate name, and clip text at 50 words at the next sentence.
+    Remove irrelevant characters and clip text at 50 words at the next sentence.
     Input:
     - text: str = input text from Internet Archive.
     - max_words: int = maximum number of words to consider if text contains more than max_words words.
@@ -101,9 +105,7 @@ def upload_to_GCP(df, file_path: str):
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = GCP_KEY
     
     # connect to GCP
-    bucket_name = 'data-lnt'
     bucket_path = 'raw/unlabeled.csv'
-    storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(bucket_path)
 
@@ -128,7 +130,11 @@ def scrape():
     - pd.DataFrame = data frame of results; each row represents one mention of one candidate.
     '''
     # read list of candidates
-    candidates_df = pd.read_csv('candidates.csv', names=['first_name', 'last_name', 'party'])
+    bucket_path = 'raw/candidates.csv'
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(bucket_path)
+    content = blob.download_as_text()
+    candidates_df = pd.read_csv(io.StringIO(content), names=['first_name', 'last_name', 'party'])
     
     # fetch data from Internet Archive
     mentions = []
@@ -151,7 +157,7 @@ def scrape():
             
             # extract mention text
             text = result.find_element(By.CLASS_NAME, 'sin-detail').text
-            text = clean_text(text, first_name, last_name) 
+            text = clean_text(text) 
             
             # append mention to dataframe
             mentions.append({
