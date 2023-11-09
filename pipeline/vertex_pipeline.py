@@ -1,7 +1,10 @@
 import kfp
-from kfp.v2 import dsl
-from kfp.v2.dsl import component
+from kfp import component, dsl, compiler
+from google.cloud import aiplatform
+from google_cloud_pipeline_components import v1
 
+project_id = 'ac215-400221'
+pipeline_root_path = 'gs://models-lnt/pipeline'
 
 # Define a component for each step in the pipeline
 @component
@@ -14,18 +17,13 @@ def run_image_step(
        image=image_uri
     )
 
-# Define the pipeline
-@dsl.pipeline(
-    name='lnt-pipeline',
-    description='LNT Pipeline that Scrapes, Labels, and Summarizes'
-)
 
-def lnt_pipeline(
-    scrape: str,
-    label: str,
-    summarize: str
-):
-    # Run the first image
+# Define the workflow of the pipeline.
+@kfp.dsl.pipeline(
+    name="lnt-pipeline",
+    pipeline_root=pipeline_root_path)
+
+def pipeline(project_id: str):
     first_step = run_image_step(
        name='scrape',
        image_uri='us-east4-docker.pkg.dev/ac215-400221/lnt-repository/lnt-scrape:1.0.0'
@@ -43,3 +41,9 @@ def lnt_pipeline(
        image_uri='us-east4-docker.pkg.dev/ac215-400221/lnt-repository/lnt-summarize:1.0.0'
     ).after(second_step)
 
+
+# Compile the pipeline
+compiler.Compiler().compile(
+    pipeline_func=pipeline,
+    package_path='lnt-pipeline.yaml'
+)
