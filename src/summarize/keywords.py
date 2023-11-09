@@ -12,14 +12,12 @@ import numpy as np
 import torch
 
 # Declare global variables
-GCP_KEY = os.environ.get('GCP_KEY')
 GCP_DATA_BUCKET = 'data-lnt'
 GCP_SOURCE_FILENAME = 'raw/unlabeled.csv'
 MODEL_SPECIFICATION = 'ml6team/keyphrase-extraction-kbir-inspec'
 OUTPUT_FILEPATH = 'processed/keywords.csv'
 
 #create GCP Client
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GCP_KEY
 storage_client = storage.Client()
 bucket = storage_client.bucket(GCP_DATA_BUCKET)
 source_filename = GCP_SOURCE_FILENAME

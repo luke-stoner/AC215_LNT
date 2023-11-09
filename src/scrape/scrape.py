@@ -1,4 +1,4 @@
-#import libraries and set GCP key
+#import libraries
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
@@ -9,7 +9,6 @@ import re
 import time
 import pandas as pd
 from datetime import datetime, timedelta
-GCP_KEY = os.environ.get('GCP_KEY')
 
 # Get the current date and time
 current_datetime = datetime.now()
@@ -101,8 +100,6 @@ def upload_to_GCP(df, file_path: str):
     df: pandas dataframe with candidate mentions
     file_path: str = path to file to upload.
     '''
-    # load credentials
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = GCP_KEY
     
     # connect to GCP
     bucket_path = 'raw/unlabeled.csv'
