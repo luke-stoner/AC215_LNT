@@ -20,7 +20,6 @@ GCP_HAND_LABEL_FILENAME = 'raw/hand_labeled.csv'
 MODEL_SPECIFICATION = "siebert/sentiment-roberta-large-english"
 OUTPUT_FILEPATH = 'processed/labeled.csv'
 MODEL_DIR_FINETUNE = 'fine_tune_label'
-GCP_KEY = os.environ.get('GCP_KEY')
 WANDB_FILE = 'secrets/wandb.txt'
 
 TEST_SIZE = 0.3
@@ -32,7 +31,6 @@ LABEL_BATCH_SIZE = 32
 PATIENCE = 5
 
 #create GCP Client
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GCP_KEY
 storage_client = storage.Client()
 bucket = storage_client.bucket(GCP_DATA_BUCKET)
 unlabeled_blob = bucket.blob(GCP_SOURCE_FILENAME)
