@@ -21,7 +21,7 @@ MODEL_SPECIFICATION = "siebert/sentiment-roberta-large-english"
 OUTPUT_FILEPATH = 'processed/labeled.csv'
 MODEL_DIR_FINETUNE = 'fine_tune_label'
 GCP_KEY = os.environ.get('GCP_KEY')
-WANDB_KEY = os.environ.get('WANDB_KEY')
+WANDB_FILE = 'secrets/wandb.txt'
 
 TEST_SIZE = 0.3
 NUMBER_EPOCHS = 10
@@ -37,8 +37,15 @@ storage_client = storage.Client()
 bucket = storage_client.bucket(GCP_DATA_BUCKET)
 unlabeled_blob = bucket.blob(GCP_SOURCE_FILENAME)
 labeled_blob = bucket.blob(GCP_HAND_LABEL_FILENAME)
+wandb_blob = bucket.blob(WANDB_FILE)
+
+#get unlabeled and hand labeled datasets
 unlabeled_content = unlabeled_blob.download_as_text()
 labeled_content = labeled_blob.download_as_text()
+
+#set wandb key
+wandb_content = wandb_blob.download_as_string()
+WANDB_KEY = str(wandb_content)[2:-1]
 
 # Check if a GPU is available
 if torch.cuda.is_available():
