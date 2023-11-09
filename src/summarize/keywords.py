@@ -12,7 +12,7 @@ import numpy as np
 import torch
 
 # Declare global variables
-GCP_KEY = '/home/jupyter/secrets/ac215.json'
+GCP_KEY = os.environ.get('GCP_KEY')
 GCP_DATA_BUCKET = 'data-lnt'
 GCP_SOURCE_FILENAME = 'raw/unlabeled.csv'
 MODEL_SPECIFICATION = 'ml6team/keyphrase-extraction-kbir-inspec'
