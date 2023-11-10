@@ -1,5 +1,6 @@
 import kfp
-from kfp import component, dsl, compiler
+from kfp import dsl, compiler
+from kfp.dsl import component
 from google.cloud import aiplatform
 from google_cloud_pipeline_components import v1
 
@@ -12,11 +13,10 @@ def run_image_step(
     name: str,
     image_uri: str
 ):
-    return dsl.ContainerOp(
-       name=name,
-       image=image_uri
-    )
-
+    return {
+       'name': name,
+       'image': image_uri
+    }
 
 # Define the workflow of the pipeline.
 @kfp.dsl.pipeline(
@@ -26,19 +26,19 @@ def run_image_step(
 def pipeline(project_id: str):
     first_step = run_image_step(
        name='scrape',
-       image_uri='us-east4-docker.pkg.dev/ac215-400221/lnt-repository/lnt-scrape:1.0.0'
+       image_uri='us-east4-docker.pkg.dev/ac215-400221/lnt-repository/lnt-scrape:1.0.1'
     )
 
     # Run the second image after the first
     second_step = run_image_step(
        name='label',
-       image_uri='us-east4-docker.pkg.dev/ac215-400221/lnt-repository/lnt-label:1.1.5'
+       image_uri='us-east4-docker.pkg.dev/ac215-400221/lnt-repository/lnt-label:1.1.7'
     ).after(first_step)
 
     # Run the third image after the second
     third_step = run_image_step(
        name='summarize',
-       image_uri='us-east4-docker.pkg.dev/ac215-400221/lnt-repository/lnt-summarize:1.0.0'
+       image_uri='us-east4-docker.pkg.dev/ac215-400221/lnt-repository/lnt-summarize:1.0.1'
     ).after(second_step)
 
 
