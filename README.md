@@ -5,22 +5,33 @@ For Milestone 3 - See branch `milestone3`
 
 GitHub File Structure:
 ------------
+
       ├── LICENSE
       ├── README.md
       ├── requirements.txt
       └── src
-            ├── scrape_data              
+            ├── deploy
+            │   ├── images
+            │   ├── README.md
+            │   └── src
+            ├── label
             │   ├── Dockerfile
-            │   ├── scrape_candidates.py
+            │   ├── label.ipynb
+            │   ├── label.py
             │   └── requirements.txt
-            └── bert_label_initial
-            │   ├── Dockerfile
-            │   ├── bert_label_initial.py
-            │   └── requirements.txt
-            └── bert_train
+            ├── scrape
+            │   ├── Dockerfile
+            │   ├── scrape.ipynb
+            │   ├── scrape.py
+            │   └── requirements.txt
+            └── summarize
                 ├── Dockerfile
-                ├── bert_fine_tune.py
+                ├── keywords.ipynb
+                ├── keywords.py
+                ├── summarize.ipynb
                 └── requirements.txt
+--------
+          
                 
 **scrape_data container**
 - Scrapes desired data from Internet Archive and cleans/crops text to desired length
@@ -54,6 +65,23 @@ GitHub File Structure:
 (2) `requirements.txt` 
 
 (3) `src/validation/Dockerfile`
+
+## **New components (MS4):**
+**Deploy Container**
+- Handles the deployment of models and data processes.
+- Contains a README for deployment instructions and images for visual guidance.
+
+**Label Container**
+- Manages the labeling of data using updated models and methods.
+- label.py and label.ipynb handle the labeling logic.
+
+**Scrape Container**
+- Responsible for scraping and initial processing of data.
+- scrape.py and scrape.ipynb execute scraping tasks.
+
+**Summarize Container**
+- Summarizes text data
+
 
 
 GCP Bucket Structure:
