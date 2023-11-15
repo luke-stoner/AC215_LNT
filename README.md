@@ -33,7 +33,7 @@ GitHub File Structure:
 --------
           
                 
-**scrape container**
+**Scrape Container**
 - Scrapes desired data from Internet Archive and cleans/crops text to desired length
 - Input to this container is a candidates.csv file listing each presidential candidate
 - Output from this container is a csv file titled 'raw/unlabled.csv' stored in the data bucket on GCP
@@ -44,7 +44,7 @@ GitHub File Structure:
 
 (3) `Dockerfile`
 
-**label container**
+**Label Container**
 - Manages the labeling of data using updated models and methods.
 - label.py and label.ipynb handle the labeling logic --> Uses pre-trained BERT model 'cardiffnlp/twitter-xlm-roberta-base-sentiment' to provide initial label to unlabeled data
 - Fine tunes the pre-trained BERT model
