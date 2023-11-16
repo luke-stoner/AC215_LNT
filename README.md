@@ -45,10 +45,10 @@ GitHub File Structure:
 (3) `Dockerfile`
 
 **Label Container**
-- Manages the labeling of data using updated models and methods.
-- label.py and label.ipynb handle the labeling logic --> Uses pre-trained BERT model 'cardiffnlp/twitter-xlm-roberta-base-sentiment' to provide initial label to unlabeled data
-- Fine tunes the pre-trained BERT model
--  Output from this container is first a csv file titled 'processed/labeled_final.csv' in our GCP data bucket, as well as the saved final model 'fine_tune_label' in our model's bucket on GCP
+- Manages the labeling of data using a pretrained BERT model and fine-tuning via hand-labeled data 
+- Pre-trained model 'siebert/sentiment-roberta-large-english' is initially fine-tuned via hand-labeled data
+- Fine-tuned model then labels the unlabled dataset
+-  Output from this container is first a csv file titled 'processed/labeled.csv' in our GCP data bucket, as well as the saved final model 'fine_tune_label' in our model's bucket on GCP
   
 (1) `label.ipynb & label.py` - Takes unlabeled data are provides an initial sentiment label through pre-trained BERT model
 
@@ -57,9 +57,11 @@ GitHub File Structure:
 (3) `requirements.txt`
 
 **Summarize Container**
-- Summarizes text data
+- Completes two functions:
+      - Takes in candidate mentions and randomly samples to create a summary (summarize.ipynb)
+      - Randomly samples candidate mentions and extracts key words and phrases (keywords.py)
 
-(1) `keywords.ipynb & keywords.py` - 
+(1) `keywords.ipynb & keywords.py` 
 
 (2) `summarize.ipynb` 
 
@@ -73,7 +75,6 @@ GCP Bucket Structure:
 ------------
     ├── milestone2bucket                   #Archived bucket with milestone 2 deliverables
     ├── models-lnt                         #Bucket to store model information
-            ├── bert_label
             ├── fine_tune_label
             └── summarize
     └── data-lnt                           #Bucket to store all data
@@ -92,8 +93,6 @@ GCP Bucket Structure:
 **models-lnt**
 - Bucket hosted on GCP for models
 
-(1) `bert_label` - Untuned BERT model used to classify sentiment per candidate
-
 (2) `fine_tune_label` - Fine-tuned BERT model 
 
 (3) `summarize` -  Model that summarizes weekly news per candidate (to be completed at a later milestone)
@@ -111,4 +110,4 @@ GCP Bucket Structure:
 
 (5) `processed/summaries.csv` - Candidate summaries (updated weekly) derived from `bert_summarize` model
 
-(6) `processed/keywords.csv` - CKeywords derived from `bert_summarize` model
+(6) `processed/keywords.csv` - Keywords derived from `bert_summarize` model
