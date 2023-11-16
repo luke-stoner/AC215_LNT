@@ -907,17 +907,6 @@
             "markers": "python_version >= '3.7'",
             "version": "==0.7.2"
         },
-        "tensorflow-aarch64": {
-            "hashes": [
-                "sha256:0f214f6e3c8e100d0738f85857225a20424df1d0e89dd9599bd1336fc0c35a98",
-                "sha256:a4526c6c4272424e07b232fa9847d827d0cd7bd614de2cb04fae8c82031422fa",
-                "sha256:d844a00a1bb500701b51b3080ecd9629bd11c85eeae214dbf6f7530a65e9728e",
-                "sha256:e812360ce5a776629e119ffa233a4ad057bf0c246cef709e5b1aac3d71dbd5ce"
-            ],
-            "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==2.13.1"
-        },
         "tensorflow-estimator": {
             "hashes": [
                 "sha256:6f868284eaa654ae3aa7cacdbef2175d0909df9fcf11374f5166f8bf475952aa"
