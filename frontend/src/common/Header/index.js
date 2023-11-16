@@ -52,7 +52,7 @@ const Header = (props) => {
                     </IconButton>
                     <Link to="/" className={classes.appLink}>
                         <Typography className={classes.appTitle} >
-                            🍄 Mushroom Identifier
+                            Race for the White House
                         </Typography>
                     </Link>
 
@@ -64,14 +64,6 @@ const Header = (props) => {
                             <Icon>home</Icon>
                             <Typography variant="caption">&nbsp;Home</Typography>
                         </IconButton>
-                        <IconButton color="inherit" component={Link} to="/experiments">
-                            <Icon>experiments</Icon>
-                            <Typography variant="caption">&nbsp;Experiments</Typography>
-                        </IconButton>
-                        <IconButton color="inherit" component={Link} to="/currentmodel">
-                            <Icon>model_training</Icon>
-                            <Typography variant="caption">&nbsp;Model</Typography>
-                        </IconButton>
                         {/* <IconButton color="inherit">
                             <Icon>login</Icon>
                             <Typography variant="caption">&nbsp;Login</Typography>
@@ -79,37 +71,6 @@ const Header = (props) => {
                     </div>
                 </Toolbar>
             </AppBar>
-            <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
-                <div
-                    tabIndex={0}
-                    role="button"
-                    onClick={toggleDrawer(false)}
-                    onKeyDown={toggleDrawer(false)}
-                >
-                    <div className={classes.list}>
-                        <List>
-                            <ListItem button key='home' component={Link} to="/">
-                                <ListItemIcon><Icon>home</Icon></ListItemIcon>
-                                <ListItemText primary='Home' />
-                            </ListItem>
-                        </List>
-                        <Divider />
-                        <List>
-                            <ListItem button key='menuitem12' component={Link} to="/experiments">
-                                <ListItemIcon><Icon>experiments</Icon></ListItemIcon>
-                                <ListItemText primary='Experiments' />
-                            </ListItem>
-
-                        </List>
-                        <List>
-                            <ListItem button key='menuitem12' component={Link} to="/currentmodel">
-                                <ListItemIcon><Icon>star</Icon></ListItemIcon>
-                                <ListItemText primary='Current Model' />
-                            </ListItem>
-                        </List>
-                    </div>
-                </div>
-            </Drawer>
         </div>
     );
 }
