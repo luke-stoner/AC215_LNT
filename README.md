@@ -1,19 +1,37 @@
-AC215-Template (Milestone 4)
+AC215-Template (Milestone 5)
 ==============================
 
-For Milestone 3 - See branch `milestone3`
+For Milestone 4 - See branch `milestone4`
 
 GitHub File Structure:
 ------------
 
       ├── LICENSE
       ├── README.md
-      ├── requirements.txt
+      ├── api-service
+            ├── api
+            │   ├── fetch_data.py
+            │   ├── service.py
+            ├── Dockerfile
+            ├── docker-shell.sh
+            ├── docker-entrypoint.sh
+            ├── Pipfile
+            ├── pipfile.lock
+      ├── frontend
+            ├── Dockerfile
+            ├── docker-shell.sh
+            ├── index.html
+            ├── css
+            │   ├── style.css
+            ├── favicon
+            │   ├── ...
+            ├── fonts
+            │   ├── ...
+            ├── img
+            │   ├── ...
+            ├── js
+            │   ├── ...
       └── src
-            ├── deploy
-            │   ├── images
-            │   ├── README.md
-            │   └── src
             ├── label
             │   ├── Dockerfile
             │   ├── label.ipynb
