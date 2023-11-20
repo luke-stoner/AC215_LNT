@@ -9,7 +9,7 @@ d3.csv("data/labeled.csv").then(function (data) {
   var avgScores = d3
     .rollups(
       data,
-      (v) => d3.mean(v, (d) => d.positive_score),
+      (v) => d3.mean(v, (d) => d.label),
       (d) => d.network,
       (d) => d.party,
     )
