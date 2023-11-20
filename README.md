@@ -60,7 +60,7 @@ GitHub File Structure:
 - Will be continuously updated over the next 2-3 weeks
                 
 **Scrape Container**
-- Scrapes desired data from Internet Archive and cleans/crops text to desired length
+- Scrapes specified data from Internet Archive and cleans/crops text to desired length
 - Input to this container is a candidates.csv file listing each presidential candidate
 - Output from this container is a csv file titled 'raw/unlabled.csv' stored in the data bucket on GCP
 
@@ -71,12 +71,12 @@ GitHub File Structure:
 (3) `Dockerfile`
 
 **Label Container**
-- Manages the labeling of data using updated models and methods.
-- label.py and label.ipynb handle the labeling logic --> Uses pre-trained BERT model 'cardiffnlp/twitter-xlm-roberta-base-sentiment' to provide initial label to unlabeled data
-- Fine tunes the pre-trained BERT model
--  Output from this container is first a csv file titled 'processed/labeled_final.csv' in our GCP data bucket, as well as the saved final model 'fine_tune_label' in our model's bucket on GCP
+- Manages the labeling of data using updated models and methods
+- label.py and label.ipynb handle the labeling logic --> Uses pre-trained RoBERTa model 'siebert/sentiment-roberta-large-english'
+- Fine tunes the pre-trained BERT model using hand labeled data
+- Output from this container is first a csv file titled 'processed/labeled.csv' in our GCP data bucket, as well as the saved final model 'fine_tune_label' in our model's bucket on GCP
   
-(1) `label.ipynb & label.py` - Takes unlabeled data are provides an initial sentiment label through pre-trained BERT model
+(1) `label.ipynb & label.py` - Takes unlabeled data are provides a sentiment label (0 or 1) through pre-trained RoBERTa model
 
 (2) `Dockerfile` 
 
