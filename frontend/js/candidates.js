@@ -142,7 +142,7 @@ const party_color = {
   Independent: "gray",
 };
 
-// Dimensions and layout parameters
+// Create SVG
 const width = 900;
 const height = 600;
 const margin = 20;
@@ -150,12 +150,11 @@ const circleRadius = 65;
 const circlePadding = 30;
 const columns = Math.floor(
   (width - 2 * margin) / (2 * circleRadius + circlePadding)
-); // Calculate the number of columns dynamically
-const rows = Math.ceil(candidate_descriptions.length / columns); // Calculate the number of rows based on the number of columns
-const colWidth = (width - 2 * margin) / columns; // Calculate the width of each column based on the number of columns
-const rowHeight = (height - 2 * margin) / rows; // Calculate the height of each row based on the number of rows
+);
+const rows = Math.ceil(candidate_descriptions.length / columns);
+const colWidth = (width - 2 * margin) / columns;
+const rowHeight = (height - 2 * margin) / rows;
 
-// Create SVG element inside the div#candidate-info
 const svg = d3
   .select("#candidate-info")
   .append("svg")
@@ -163,7 +162,7 @@ const svg = d3
   .attr("height", height)
   .attr("class", "candidate-svg");
 
-// Define the shadow filter
+// Shadows for circles
 const filter = svg
   .append("defs")
   .append("filter")
@@ -187,28 +186,36 @@ const feMerge = filter.append("feMerge");
 feMerge.append("feMergeNode").attr("in", "offsetBlur");
 feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 
-// Create and position circles
+// Create a tooltip div
+const tooltip = d3
+  .select("body")
+  .append("div")
+  .attr("class", "tooltip")
+  .style("opacity", 50)
+  .style("position", "absolute")
+  .style("background-color", "rgba(255, 255, 255, 0.8)") // Slightly transparent white
+  .style("border", "solid")
+  .style("border-width", "2px")
+  .style("border-radius", "5px")
+  .style("padding", "5px");
+
+// Candidate Circles
 const circles = svg
   .selectAll("g")
   .data(candidate_descriptions)
   .enter()
   .append("g")
   .on("mouseover", function (event, d) {
-    d3.select(this)
-      .select(".candidate-circle")
-      .transition()
-      .duration(200)
-      .attr("r", circleRadius + 5);
-    d3.select(this).select(".candidate-label").classed("hovered-text", true);
-    handleCircleMouseOver(event, d);
+    handleCircleMouseOver(event, d, this);
+  })
+  .on("mousemove", function (event) {
+    // Update tooltip position while moving the mouse
+    tooltip
+      .style("left", event.pageX + 10 + "px")
+      .style("top", event.pageY + 10 + "px");
   })
   .on("mouseout", function () {
-    d3.select(this)
-      .select(".candidate-circle")
-      .transition()
-      .duration(200)
-      .attr("r", circleRadius);
-    d3.select(this).select(".candidate-label").classed("hovered-text", false);
+    handleCircleMouseOut(this);
   });
 
 circles
@@ -234,38 +241,98 @@ circles
   .attr("text-anchor", "middle")
   .attr("alignment-baseline", "middle")
   .attr("class", "candidate-label")
-  .attr("fill", "white");
+  .attr("fill", "white")
+  .style("user-select", "none");
 
-function handleCircleMouseOver(event, candidate) {
-  // Candidate Image
+const legendWidth = Object.keys(party_color).length * 120;
+const legendX = (width - legendWidth) / 2;
+
+const legend = svg
+  .append("g")
+  .attr("class", "legend")
+  .attr("transform", `translate(${legendX}, ${height - margin})`);
+
+const legendItems = legend
+  .selectAll(".legend-item")
+  .data(Object.keys(party_color))
+  .enter()
+  .append("g")
+  .attr("class", "legend-item")
+  .attr("transform", (d, i) => `translate(${i * 120}, -10)`);
+
+legendItems
+  .append("circle")
+  .attr("r", 7)
+  .attr("cx", 10)
+  .attr("cy", 10)
+  .attr("fill", (d) => party_color[d]);
+
+legendItems
+  .append("text")
+  .text((d) => d)
+  .attr("x", 20)
+  .attr("y", 12)
+  .attr("alignment-baseline", "middle");
+
+function handleCircleMouseOver(event, candidate, element) {
+  d3.select(element)
+    .select(".candidate-circle")
+    .transition()
+    .duration(200)
+    .attr("r", circleRadius + 5);
+  d3.select(element).select(".candidate-label").classed("hovered-text", true);
+
+  // Show the tooltip
+  tooltip.transition().duration(200).style("opacity", 1);
+
+  // Populate the tooltip content
+  tooltip
+    .html(
+      `<strong>${candidate.first} ${candidate.last}</strong><br>Party: ${
+        candidate.party
+      }<br>State: ${candidate.state}<br>Age: ${calculateAge(
+        candidate.birthday
+      )}`
+    )
+    .style("left", event.pageX + 10 + "px")
+    .style("top", event.pageY + 10 + "px");
+
+  // Show candidate photo and name
   const photoDiv = document.getElementById("candidate-info-photo");
   photoDiv.innerHTML = `<img src="${candidate.image}" alt="${candidate.first} ${candidate.last}" style="width: 100%;" class="img-fluid hover-animate delay-0 rounded-circle">`;
 
-  // Candidate Name
   const nameDiv = document.getElementById("candidate-info-name");
   const nameElement = document.createElement("h5");
   nameElement.textContent = `${candidate.first} ${candidate.last}`;
   nameDiv.innerHTML = "";
   nameDiv.appendChild(nameElement);
+}
 
-  // Candidate party
-  const partyDiv = document.getElementById("candidate-info-party");
-  const partyElement = document.createElement("h5");
-  partyElement.textContent = `Party: ${candidate.party}`;
-  partyDiv.innerHTML = "";
-  partyDiv.appendChild(partyElement);
+function handleCircleMouseOut(element) {
+  d3.select(element)
+    .select(".candidate-circle")
+    .transition()
+    .duration(200)
+    .attr("r", circleRadius);
+  d3.select(element).select(".candidate-label").classed("hovered-text", false);
 
-  // Candidate state
-  const stateDiv = document.getElementById("candidate-info-state");
-  const stateElement = document.createElement("h5");
-  stateElement.textContent = `State: ${candidate.state}`;
-  stateDiv.innerHTML = "";
-  stateDiv.appendChild(stateElement);
+  // Hide the tooltip
+  tooltip.transition().duration(200).style("opacity", 0);
+}
 
-  // Candidate birthday
-  const birthdayDiv = document.getElementById("candidate-info-birthday");
-  const birthdayElement = document.createElement("h5");
-  birthdayElement.textContent = `Birthday: ${candidate.birthday}`;
-  birthdayDiv.innerHTML = "";
-  birthdayDiv.appendChild(birthdayElement);
+function calculateAge(birthday) {
+  var birthdayDate = new Date(birthday);
+  var today = new Date();
+
+  var age = today.getFullYear() - birthdayDate.getFullYear();
+  var monthDifference = today.getMonth() - birthdayDate.getMonth();
+
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < birthdayDate.getDate())
+  ) {
+    age--;
+  }
+
+  return age;
 }

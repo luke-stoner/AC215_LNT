@@ -19,8 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ],
     navigation: true,
     navigationPosition: "right",
+    licenseKey: "gplv3-license"
   });
 });
-
-
 
