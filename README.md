@@ -94,12 +94,10 @@ GitHub File Structure:
 (4) `requirements.txt`
 
 
-
 GCP Bucket Structure:
 ------------
     ├── milestone2bucket                   #Archived bucket with milestone 2 deliverables
     ├── models-lnt                         #Bucket to store model information
-            ├── bert_label
             ├── fine_tune_label
             └── summarize
     └── data-lnt                           #Bucket to store all data
