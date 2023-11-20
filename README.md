@@ -50,6 +50,14 @@ GitHub File Structure:
                 └── requirements.txt
 --------
           
+**API-Service Container**
+- Fetches most recent labeled.csv file from GCP Data Bucket on webapp startup
+- Labeled data is then stored in persistent folder
+
+**Frontend Container**
+- Takes labeled.csv as input to produce scrollable visualization story 
+- Uses javascript and D3 library to create interactive, costumizeable visualizations
+- Will be continuously updated over the next 2-3 weeks
                 
 **Scrape Container**
 - Scrapes desired data from Internet Archive and cleans/crops text to desired length
