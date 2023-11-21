@@ -49,6 +49,12 @@ GitHub File Structure:
                 ├── summarize.ipynb
                 └── requirements.txt
 --------
+
+**Solution Architechture**
+<img width="917" alt="SolutionArchitecture" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/2c4a2c59-cf0e-4944-8dc9-5dd00bec1eac">
+
+**Technical Architechture**
+<img width="913" alt="TechnicalArchitechture" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/1cf9e0d6-67af-4c4d-9d2f-f43730042100">
           
 **API-Service Container**
 - Fetches most recent labeled.csv file from GCP Data Bucket on webapp startup
