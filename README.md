@@ -32,17 +32,17 @@ GitHub File Structure:
             ├── js                         #Contains all js files that are used to create visualizations
             │   ├── ...
       └── src
-            ├── label
+            ├── label                      #Takes in unlabeled candidate mentions and provides sentiment label
             │   ├── Dockerfile
             │   ├── label.ipynb
             │   ├── label.py
             │   └── requirements.txt
-            ├── scrape
+            ├── scrape                     #Scrapes the Internet Archive to get candidate mentions in the past week
             │   ├── Dockerfile
             │   ├── scrape.ipynb
             │   ├── scrape.py
             │   └── requirements.txt
-            └── summarize
+            └── summarize                  #Randomly samples candidate mentions to create summaries and extract keywords
                 ├── Dockerfile
                 ├── keywords.ipynb
                 ├── keywords.py
