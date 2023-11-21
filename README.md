@@ -1,4 +1,4 @@
-AC215-Template (Milestone 5)
+Milestone 5
 ==============================
 
 For Milestone 4 - See branch `milestone4`
