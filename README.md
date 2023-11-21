@@ -117,11 +117,9 @@ GCP Bucket Structure:
 **models-lnt**
 - Bucket hosted on GCP for models
 
-(1) `bert_label` - Untuned BERT model used to classify sentiment per candidate
+(1) `fine_tune_label` - Fine-tuned BERT model 
 
-(2) `fine_tune_label` - Fine-tuned BERT model 
-
-(3) `summarize` -  Model that summarizes weekly news per candidate (to be completed at a later milestone)
+(2) `summarize` -  Model that summarizes weekly news per candidate
 
 **data-lnt**
 - Bucket hosted on GCP gathering our scraped data
