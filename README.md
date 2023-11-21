@@ -1,6 +1,5 @@
-AC215-Template (Final Milestone)
+AC215: Team LNT
 ==============================
 
-For Milestone 2 - See branch `milestone2`
+For Milestone 5 - See branch `milestone5`
 
-For Milestone 3 - See branch `milestone3`
