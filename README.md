@@ -8,28 +8,28 @@ GitHub File Structure:
 
       ├── LICENSE
       ├── README.md
-      ├── api-service
+      ├── api-service                      #Fetches current labeled data and saves to persistent disk
             ├── api
-            │   ├── fetch_data.py
-            │   ├── service.py
+            │   ├── fetch_data.py          #Fetches data
+            │   ├── service.py             #Creates FastAPI server
             ├── Dockerfile
             ├── docker-shell.sh
-            ├── docker-entrypoint.sh
+            ├── docker-entrypoint.sh 
             ├── Pipfile
             ├── pipfile.lock
-      ├── frontend
+      ├── frontend                         #Uses html/css/js structure to create user friendly frontend
             ├── Dockerfile
             ├── docker-shell.sh
-            ├── index.html
+            ├── index.html                 #Html file that calls all necessary css/js files and structures webapp
             ├── css
             │   ├── style.css
             ├── favicon
             │   ├── ...
             ├── fonts
             │   ├── ...
-            ├── img
+            ├── img                        #Stores candidate images and other graphics dependecies
             │   ├── ...
-            ├── js
+            ├── js                         #Contains all js files that are used to create visualizations
             │   ├── ...
       └── src
             ├── label
