@@ -65,6 +65,7 @@ GitHub File Structure:
 - Uses javascript and D3 library to create interactive, costumizeable visualizations
 - Will be continuously updated over the next 2-3 weeks
 - **Frontend External IP:** http://34.69.165.89/
+- [Design Outline File](https://docs.google.com/document/d/1Vavxabj-kkGo9ALUjU2Ao9aGbNjiCtj-P8-gV8lmH-I/edit?usp=sharing) 
                 
 **Scrape Container**
 - Scrapes specified data from Internet Archive and cleans/crops text to desired length
