@@ -8,41 +8,41 @@ GitHub File Structure:
 
       ├── LICENSE
       ├── README.md
-      ├── api-service
+      ├── api-service                      #Fetches current labeled data and saves to persistent disk
             ├── api
-            │   ├── fetch_data.py
-            │   ├── service.py
+            │   ├── fetch_data.py          #Fetches data
+            │   ├── service.py             #Creates FastAPI server
             ├── Dockerfile
             ├── docker-shell.sh
-            ├── docker-entrypoint.sh
+            ├── docker-entrypoint.sh 
             ├── Pipfile
             ├── pipfile.lock
-      ├── frontend
+      ├── frontend                         #Uses html/css/js structure to create user friendly frontend
             ├── Dockerfile
             ├── docker-shell.sh
-            ├── index.html
+            ├── index.html                 #Html file that calls all necessary css/js files and structures webapp
             ├── css
             │   ├── style.css
             ├── favicon
             │   ├── ...
             ├── fonts
             │   ├── ...
-            ├── img
+            ├── img                        #Stores candidate images and other graphics dependecies
             │   ├── ...
-            ├── js
+            ├── js                         #Contains all js files that are used to create visualizations
             │   ├── ...
       └── src
-            ├── label
+            ├── label                      #Takes in unlabeled candidate mentions and provides sentiment label
             │   ├── Dockerfile
             │   ├── label.ipynb
             │   ├── label.py
             │   └── requirements.txt
-            ├── scrape
+            ├── scrape                     #Scrapes the Internet Archive to get candidate mentions in the past week
             │   ├── Dockerfile
             │   ├── scrape.ipynb
             │   ├── scrape.py
             │   └── requirements.txt
-            └── summarize
+            └── summarize                  #Randomly samples candidate mentions to create summaries and extract keywords
                 ├── Dockerfile
                 ├── keywords.ipynb
                 ├── keywords.py
@@ -117,11 +117,9 @@ GCP Bucket Structure:
 **models-lnt**
 - Bucket hosted on GCP for models
 
-(1) `bert_label` - Untuned BERT model used to classify sentiment per candidate
+(1) `fine_tune_label` - Fine-tuned BERT model 
 
-(2) `fine_tune_label` - Fine-tuned BERT model 
-
-(3) `summarize` -  Model that summarizes weekly news per candidate (to be completed at a later milestone)
+(2) `summarize` -  Model that summarizes weekly news per candidate
 
 **data-lnt**
 - Bucket hosted on GCP gathering our scraped data
