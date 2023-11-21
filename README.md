@@ -57,6 +57,7 @@ GitHub File Structure:
 <img width="913" alt="TechnicalArchitechture" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/1cf9e0d6-67af-4c4d-9d2f-f43730042100">
           
 **API-Service Container**
+- Uses FastAPI to create API Server
 - Fetches most recent labeled.csv file from GCP Data Bucket on webapp startup
 - Labeled data is then stored in persistent folder
 
