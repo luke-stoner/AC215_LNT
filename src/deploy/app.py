@@ -15,9 +15,7 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Initialize Google Cloud Storage client using the service account key
-service_account_key_path = os.path.expanduser('~/secrets/ac215.json')
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = service_account_key_path
+# Initialize Google Cloud Storage client
 storage_client = storage.Client()
 
 # Load tokenizer from the Hugging Face model hub
