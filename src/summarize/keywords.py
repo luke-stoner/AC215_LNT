@@ -57,7 +57,7 @@ class KeyphraseExtractionPipeline(TokenClassificationPipeline):
 
     
 def extract(dataframe):
-    #initialize summary dataframe
+    #initialize extraction dataframe
     extract_df = pd.DataFrame(columns=['first_name', 'last_name'])
     
     #get lists of candidate names and add to extract_df
@@ -89,12 +89,12 @@ def extract(dataframe):
     #create key words
     extraction = extractor(candidate_text)
     
-    #init list to stores summaries and append summary for each candidate
+    #init list to stores key words and append key words for each candidate
     candidate_key_words = []
     for key_words in extraction:
         candidate_key_words.append(list(key_words))
 
-    #append name, party, summary to df
+    #append name, party, key words to df
     extract_df['first_name'] = first_names
     extract_df['last_name'] = last_names
     extract_df['key_words'] = candidate_key_words
@@ -124,10 +124,10 @@ def save_dataset(df, outfilepath):
 df = pd.read_csv(io.StringIO(content))
 df = df.dropna()
 
-#define summarization pipeline
+#define extraction pipeline
 extractor = KeyphraseExtractionPipeline(model=MODEL_SPECIFICATION, device=device)
 
-#summarize the dataframe
+#create key word dataframe
 extract_df = extract(df)
 
 #save the output dataframe
