@@ -1,4 +1,4 @@
-Flask==2.0.2
-transformers==4.11.3
-torch==1.10.0
+Flask==3.0.0
+transformers==4.35.2
+torch==2.0.0
 google-cloud-storage==2.11.0
