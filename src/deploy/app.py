@@ -22,6 +22,7 @@ storage_client = storage.Client()
 
 # Load tokenizer from the Hugging Face model hub
 tokenizer = AutoTokenizer.from_pretrained("siebert/sentiment-roberta-large-english")
+model = AutoModelForSequenceClassification.from_pretrained("siebert/sentiment-roberta-large-english")
 
 # Define function to download 'model.pth' from GCS folder to a temporary directory
 def download_model_to_temporary_dir():
@@ -43,15 +44,10 @@ def download_model_to_temporary_dir():
         logger.error(f"Error downloading 'model.pth' from GCS: {str(e)}")
         return None
 
-# Download 'model.pth' to a temporary directory
+# Download 'model.pth' to a temporary directory and then load the state dict
 model_path = download_model_to_temporary_dir()
-
-if model_path:
-    # Load the fine-tuned model from 'model.pth'
-    model = AutoModelForSequenceClassification.from_pretrained(model_path)
-else:
-    logger.error("Model loading failed. Check the logs for details.")
-
+model.load_state_dict(torch.load(model_path))
+model.eval()
 
 @app.route("/v1/endpoints/<endpoint_id>/deployedModels/<deployed_model_id>/sentiment", methods=["POST"])
 def predict_sentiment(endpoint_id, deployed_model_id):
@@ -74,12 +70,9 @@ def predict_sentiment(endpoint_id, deployed_model_id):
 
             inputs = tokenizer(input_text, return_tensors="pt")
             
-            # Ensure the model is in evaluation mode
-            model.eval()
-            
             with torch.no_grad():  # Disable gradient calculation for inference
                 outputs = model(**inputs)
-                predicted_class = torch.softmax(outputs.logits, dim=1)
+                predicted_class = torch.softmax(outputs.logits, dim=1).tolist()
                 predicted_sentiments.append(predicted_class)
 
         # Return the predicted sentiments
@@ -98,7 +91,7 @@ def get_model_info(endpoint_id, deployed_model_id):
         # manage and fetch specific model info
         # Example: Fetch and return some information about the model
         model_info = {
-            "model_name": "Sentiment Analysis - siebert/sentiment-roberta-large-english",
+            "model_name": "LNT-Label",
             "endpoint_id": endpoint_id,
             "deployed_model_id": deployed_model_id,
         }
@@ -112,4 +105,3 @@ def get_model_info(endpoint_id, deployed_model_id):
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0", port=8080)
-
