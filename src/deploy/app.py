@@ -24,29 +24,22 @@ storage_client = storage.Client()
 tokenizer = AutoTokenizer.from_pretrained("siebert/sentiment-roberta-large-english")
 model = AutoModelForSequenceClassification.from_pretrained("siebert/sentiment-roberta-large-english")
 
-# Define function to download 'model.pth' from GCS folder to a temporary directory
-def download_model_to_temporary_dir():
-    try:
-        # Modify the bucket_name and folder_name variables as needed
-        bucket_name = 'models-lnt'
-        folder_name = 'fine_tune_label'
-        temp_dir = tempfile.TemporaryDirectory()
+# Set bucket and model folder names
+bucket_name = 'models-lnt'
+folder_name = 'fine_tune_label'
 
-        bucket = storage_client.bucket(bucket_name)
-        blob = bucket.blob(folder_name + '/model.pth')
+# Establish temporary directory to store model.pth file
+temp_dir = tempfile.TemporaryDirectory()
 
-        # Download 'model.pth' from the GCS folder to the temporary directory
-        local_file_path = os.path.join(temp_dir.name, 'model.pth')
-        blob.download_to_filename(local_file_path)
+bucket = storage_client.bucket(bucket_name)
+blob = bucket.blob(folder_name + '/model.pth')
 
-        return local_file_path
-    except Exception as e:
-        logger.error(f"Error downloading 'model.pth' from GCS: {str(e)}")
-        return None
+# Download 'model.pth' from the GCS folder to the temporary directory
+local_file_path = os.path.join(temp_dir.name, 'model.pth')
+blob.download_to_filename(local_file_path)
 
-# Download 'model.pth' to a temporary directory and then load the state dict
-model_path = download_model_to_temporary_dir()
-model.load_state_dict(torch.load(model_path))
+# Load the state dict and set model to eval mode
+model.load_state_dict(torch.load(local_file_path))
 model.eval()
 
 @app.route("/v1/endpoints/<endpoint_id>/deployedModels/<deployed_model_id>/sentiment", methods=["POST"])
