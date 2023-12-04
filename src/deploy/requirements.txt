@@ -2,3 +2,4 @@ Flask==3.0.0
 transformers==4.35.2
 torch==2.0.0
 google-cloud-storage==2.11.0
+gunicorn==21.2.0
