@@ -1,11 +1,12 @@
-FROM pytorch/pytorch:2.0.0-cuda11.7-cudnn8-runtime
+FROM python:3.9-slim
 
-# Set the working directory
-WORKDIR /app
+# Install libraries
+COPY ./requirements.txt ./
+RUN pip install -r requirements.txt && \
+    rm ./requirements.txt
 
-# Copy dependencies file and install dependencies
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+# Setup container directories
+RUN mkdir /app
 
 # Create a directory for the credentials and copy the JSON key
 RUN mkdir -p /app/secrets
@@ -15,7 +16,10 @@ COPY ~/secrets/ac215.json /app/secrets/
 ENV GOOGLE_APPLICATION_CREDENTIALS=/app/secrets/ac215.json
 
 # Copy the rest of the application code
-COPY app.py ./
+COPY ./app /app
 
-# Start the application
-CMD ["python", "app.py"]
+# launch server with gunicorn
+WORKDIR /app
+EXPOSE 8080
+CMD ["gunicorn", "main:app", "--timeout=0", "--preload", \
+     "--workers=1", "--threads=4", "--bind=0.0.0.0:8080"]
