@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 import asyncio
-from api.fetch_data import fetch_data
-import pandas as pd
+import schedule
+import api.scrape_and_label as scrape_and_label
 
 # Setup FastAPI app
 app = FastAPI(title="API Server", description="API Server", version="v1")
@@ -16,11 +16,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.on_event("startup")
-async def startup():
-    print("Startup tasks")
-    # Get labeled data
-    asyncio.create_task(fetch_data())
+# Create task to run fetch data script
+def run_scrape_and_label():
+    print("Fetching data...")
+    asyncio.run(scrape_and_label())
+
+# Function to schedule the task every Sunday at 6 PM local time
+def schedule_fetch_data():
+    schedule.every().sunday.at("18:00").do(run_scrape_and_label)
+
+# Start the scheduling
+schedule_fetch_data()
 
 # Routes
 @app.get("/")

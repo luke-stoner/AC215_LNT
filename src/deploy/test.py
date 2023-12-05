@@ -33,5 +33,5 @@ response = client.predict(endpoint=endpoint, instances=instances)
 # Extract predictions from endpoint response
 preds = response.predictions
 
-
-print(preds)
+for pred in preds:
+    print(pred[0])
