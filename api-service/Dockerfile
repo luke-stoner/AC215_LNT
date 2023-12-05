@@ -33,6 +33,9 @@ RUN set -ex; \
     chown app:app /persistent && \
     chown app:app /app
 
+# Install chromedriver and its dependencies
+RUN apt-get install -y chromium-driver
+
 # Expose port of API service
 EXPOSE 9000
 

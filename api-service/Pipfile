@@ -12,6 +12,8 @@ pandas = "*"
 google-cloud-storage = "*"
 python-multipart = "*"
 google-cloud-aiplatform = "*"
+selenium = "*"
+schedule = "*"
 
 [requires]
 python_version = "3.9"
