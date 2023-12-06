@@ -225,15 +225,22 @@ def label(df, batch_size=100):
 
         # Define batch
         batch = mentions[start_idx:end_idx]
-    
-        # Chart batch progress
         print(f"Processing batch {i + 1} of {num_batches}")
 
         # Prepare batch for json format required by vertex
         instances = [json_format.ParseDict(instance_dict, Value()) for instance_dict in batch]
 
-        # Get response from endpoint based on defined instances
-        response = client.predict(endpoint=endpoint, instances=instances)
+        # Catch errors in endpoint response. Retry connection up to 10 times
+        for _ in range(10):
+            try:
+                # Get response from endpoint based on defined instances
+                response = client.predict(endpoint=endpoint, instances=instances)
+                break  # Break the loop if successful response received
+            except Exception as e:
+                print(f"Error: {e}. Retrying...")
+                # Retry the request
+        else:
+            raise RuntimeError('Failed to get a response after 10 attempts')
 
         # Extract predictions from endpoint response
         preds = response.predictions
