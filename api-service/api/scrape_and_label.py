@@ -36,8 +36,8 @@ party, positive score, negative score, label
 """
 
 # Get the current date and time
-current_datetime = datetime.now()
-seven_days_ago = current_datetime - timedelta(days=7)
+current_datetime = datetime.now() - timedelta(days=1)
+seven_days_ago = current_datetime - timedelta(days=8)
 
 # Set start and end date
 END_DATE = str(current_datetime.strftime('%Y-%m-%d'))
