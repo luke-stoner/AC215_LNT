@@ -224,4 +224,3 @@ License and Disclaimer:
 This project is licensed under a GNU General Public License. See the LICENSE file for details.
 
 We do not own the rights to any of the video, audio, or images used in this project. This project is for educational use only and may not be used for commercial purposes.
-
