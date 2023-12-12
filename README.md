@@ -201,6 +201,20 @@ Simply run `sh docker-shell.sh`, replacing project ID and cluster name as necess
 
 ### Continuous Deployment via Github Actions
 
-Lastly, with our model deployed to Vertex AI and app services deployed to Kubernetes, we need to 
+Lastly, with our model deployed to Vertex AI and app services deployed to Kubernetes, we created two Github Actions workflows to continuously deploy our model and API/frontend.
+The two workflows are described below.
+
+(`vertex.yml`) On new pushes to `src/deploy` or `src/label`:
+- Build a new Docker image for the deployment container
+- Push the image to Google Artifact Registry
+- Create a new version of our `lnt-deploy-gpu` model on Vertex AI
+- Deploy the new model version to our `lnt-endpoint-gpu` endpoint
+
+(`kube.yml`) On new pushes to `src/deploy` or `src/label`:
+- Build a new Docker image for the deployment container
+- Push the image to Google Artifact Registry
+- Create a new version of our `lnt-deploy-gpu` model on Vertex AI
+- Deploy the new model version to our `lnt-endpoint-gpu` endpoint
+
 
 
