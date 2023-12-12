@@ -1,7 +1,5 @@
-Milestone 5
+Team LNT: AC215 Final Project
 ==============================
-
-For Milestone 4 - See branch `milestone4`
 
 GitHub File Structure:
 ------------
