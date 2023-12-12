@@ -1,0 +1,8 @@
+[
+    {"name": "Biden", "frequency": 120, "photo": "data/headshots/biden.png", "party":  "D"},
+    {"name": "Trump", "frequency": 95, "photo": "data/headshots/trump.png", "party":  "R"},
+    {"name": "Ramaswamy", "frequency": 75, "photo": "data/headshots/ramaswamy.png", "party":  "R"},
+    {"name": "Haley", "frequency": 65, "photo": "data/headshots/haley.png", "party":  "R"},
+    {"name": "Williamson", "frequency": 50, "photo": "data/headshots/williamson.png", "party":  "D"}
+]
+

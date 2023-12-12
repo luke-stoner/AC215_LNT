@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Race for the White House</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="favicon/site.webmanifest" />
+
+    <!-- FULL PAGE JS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.css"
+    />
+
+    <!-- BOOTSTRAP -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
+    <!-- FONT AWESOME -->
+    <script
+      src="https://kit.fontawesome.com/516b63bb3e.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- CUSTOM CSS -->
+    <link rel="stylesheet" type="text/css" href="css/inspector.css" />
+    <link href="css/style.css" rel="stylesheet" />
+
+    <!--NO SLIDE-->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.4.0/nouislider.css"
+      integrity="sha512-DGB74Gyw93qON+V0QxSRs1er6sqoPyFoy23HBL5LN7MRJBcjeCU22zega+vOEGE0XQLoVrv4ExcaesSTwZQA2w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body>
+    <div class="row">
+      <div id="fullpage">
+        <!--BEGIN INTRO-->
+        <div class="section" id="section-0">
+          <div class="container text-center">
+            <div class="row">
+              <div class="col-md-8 mx-auto">
+                <!-- Added 'mx-auto' class for centering -->
+                <p class="fade-in-paragraph">
+                  Keeping up with American presidential elections can be tough.
+                </p>
+                <p class="fade-in-paragraph">
+                  With so many news sources and constant updates, it's easy to
+                  feel overwhelmed.
+                </p>
+                <p class="fade-in-paragraph">
+                  To address this issue, we utilized Artificial Intelligence to
+                  summarize the media coverage of candidates and present it in a
+                  more digestible format.
+                </p>
+                <p class="fade-in-paragraph">
+                  For the best experience, we suggest enabling the volume on
+                  your device.
+                </p>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  id="accept-button"
+                >
+                  Proceed
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="section-1">
+          <video id="myVideo" data-autoplay playsinline>
+            <source src="img/intro-video2.mov" type="video/mp4" />
+          </video>
+          <div>
+            <div class="row">
+              <div class="col-md-12 d-flex justify-content-center">
+                <div class="col-5 text-center">
+                  <h1 id="website-title">Race for the White House</h1>
+                  <div class="redBlock underline"></div>
+                  <div class="scroll-arrow bounce">
+                    <i
+                      id="title-scroll-arrow"
+                      class="fa-solid fa-angles-down fa-2x"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--WHITE HOUSE INTRO-->
+        <div class="section">
+          <div class="container text-center" id="white-house-introduction">
+            <p style="padding-top: 1em">
+              The White House: a symbol of power, shaped by the voice of the
+              people.
+            </p>
+            <p>Media narratives weave the fabric of our political landscape.</p>
+            <p>
+              Each word, each story, is a stroke painting our nation's future.
+            </p>
+            <p>
+              Behold the canvas of democracy, where media and minds converge to
+              elect a leader.
+            </p>
+          </div>
+        </div>
+        <!--END WHITE HOUSE INTRO-->
+
+        <!--BEGIN WHITE HOUSE VISUAL-->
+        <div class="section" id="section-2">
+          <div class="container text-center" id="white-house-visual">
+            <div class="row">
+              <div class="col-md-6 mx-auto text-center">
+                <h1>The White House</h1>
+                <div class="redBlock underline"></div>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="tv">
+                <div class="antenna-left"></div>
+                <div class="antenna-right"></div>
+                <div class="tv-content">
+                  <div
+                    class="tv-screen"
+                    id="special-viz"
+                    style="height: 100%; width: 100%"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mx-auto text-center" style="width: 50%">
+                <div class="shadow bg-white rounded" id="tv-desc">
+                  <p>
+                    The White House serves as the official home of
+                    the President of the United States. As every
+                    aspiring candidate strives to secure this prestigious
+                    residence, they inevitably attract significant media
+                    scrutiny. Hover over the above voronoi stippling image
+                    to uncover additional details! Each dot on the
+                    screen corresponds to one of the <strong>50,000+</strong>
+                    candidate mentions in our dataset.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END WHITE HOUSE VISUAL-->
+
+        <!--Introduce the Election-->
+        <div class="section" id="election-intro">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-6 text-center">
+                  <h1>2024 Presidential Election</h1>
+                </div>
+                <div class="col-6 redBlock underline"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div
+                class="shadow p-3 mb-5 bg-white rounded col-6"
+                id="election-intro-content"
+              >
+                <p>
+                  As we approach 2024, the United States gears up for another
+                  crucial Presidential Election. At this point, the focus lies
+                  on the candidates from the Republican and Democratic parties,
+                  who are competing to secure their party's nomination.
+                </p>
+                <p>
+                  The electoral process involves a series of primaries and
+                  caucuses across each state and territory, starting with the
+                  Iowa Caucus on January 15th, where voters will express their
+                  preferences for the presidential nominees within their
+                  respective parties.
+                </p>
+                <p>
+                  This initial contest marks the beginning of a rigorous
+                  campaign season where candidates will vie for support and
+                  delegates to ultimately claim their spot on the ballot for the
+                  presidency on November 5th.
+                </p>
+              </div>
+              <div class="col-md-6">
+                <img
+                  src="img/white-house.png"
+                  id="white-house"
+                  class="img-fluid"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--BEGIN PROJECT INTRODUCTION-->
+        <div class="section" id="project-intro">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-6 mx-auto text-center">
+                  <h1>Politics and Media</h1>
+                  <div class="redBlock underline"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="shadow p-3 mb-5 bg-white rounded col-12">
+                <section class="testimonial">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-lg-6 d-none d-lg-block">
+                        <ol class="carousel-indicators tabs">
+                          <li
+                            data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide-to="0"
+                            class="active"
+                          >
+                            <figure style="cursor: pointer">
+                              <img
+                                src="img/intro_page/theproblem.png"
+                                width="160"
+                                height="160"
+                                class="img-fluid"
+                                alt="Media"
+                              />
+                            </figure>
+                          </li>
+                          <li
+                            data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide-to="1"
+                          >
+                            <figure style="cursor: pointer">
+                              <img
+                                src="img/intro_page/thesolution.png"
+                                width="280"
+                                height="280"
+                                class="img-fluid"
+                                alt=""
+                              />
+                            </figure>
+                          </li>
+                          <li
+                            data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide-to="2"
+                          >
+                            <figure style="cursor: pointer">
+                              <img
+                                src="img/intro_page/learnmore.png"
+                                width="160"
+                                height="160"
+                                class="img-fluid"
+                                alt=""
+                              />
+                            </figure>
+                          </li>
+                        </ol>
+                      </div>
+                      <div
+                        class="col-lg-6 d-flex justify-content-center align-items-center"
+                      >
+                        <div
+                          id="carouselExampleIndicators"
+                          data-interval="false"
+                          class="carousel slide"
+                          data-bs-ride="carousel"
+                        >
+                          <div class="carousel-inner">
+                            <div class="carousel-item active">
+                              <h2>The Problem</h2>
+                              <div class="quote-wrapper">
+                                <p>
+                                  In the age of information, the volume of news
+                                  available can be overwhelming, making it
+                                  challenging for citizens to stay informed
+                                  without feeling inundated. TV news in
+                                  particular often focuses on sensationalism and
+                                  driving viewership over nuanced coverage. The
+                                  true substance of candidates can become
+                                  obscured, leaving potential voters grappling
+                                  with biased narratives and a lack of depth in
+                                  coverage.
+                                </p>
+                                <button class="btn btn-primary next-slide">
+                                  Next Slide
+                                </button>
+                              </div>
+                            </div>
+                            <div class="carousel-item">
+                              <h2>The Solution</h2>
+                              <div class="quote-wrapper">
+                                <p>
+                                  Leveraging the vast dataset of nearly 3
+                                  million hours of U.S. local and national TV
+                                  news from The Internet Archive, our website
+                                  summarizes key events and narratives from the
+                                  previous week using machine learning models
+                                  for the purposes of comparing sentiment across
+                                  news networks and sources.
+                                </p>
+                                <button class="btn btn-primary next-slide">
+                                  Next Slide
+                                </button>
+                              </div>
+                            </div>
+                            <div class="carousel-item">
+                              <h2>Learn More</h2>
+                              <div class="quote-wrapper">
+                                <p>
+                                  If you're interested in learning more about
+                                  how we collect our data, watch the
+                                  informational video linked below! It walks
+                                  through our data collection process from start
+                                  to finish, and is explained by some voices
+                                  that you may find familiar!
+                                </p>
+                                <button
+                                  type="button"
+                                  class="btn btn-primary"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#introModal"
+                                  id="play-vid"
+                                >
+                                  Play Video
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <ol class="carousel-indicators indicators">
+                            <li
+                              data-bs-target="#carouselExampleIndicators"
+                              data-bs-slide-to="0"
+                              class="active"
+                            ></li>
+                            <li
+                              data-bs-target="#carouselExampleIndicators"
+                              data-bs-slide-to="1"
+                            ></li>
+                            <li
+                              data-bs-target="#carouselExampleIndicators"
+                              data-bs-slide-to="2"
+                            ></li>
+                          </ol>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END PROJECT INTRODUCTION-->
+
+        <!--BEGIN CANDIDATE INTRO-->
+        <div class="section" id="section-3">
+          <div class="container text-center" id="candidate-introduction">
+            <h1>The Candidates</h1>
+            <p>
+              In the upcoming 2024 presidential election, numerous candidates
+              have become the center of media interest, piquing the curiosity of
+              the american public. As the nation eagerly anticipates its future
+              leader, these candidates have taken center stage on the national
+              platform, aiming to win over the hearts and minds of voters. With
+              the media's attention firmly fixed upon them, let's formally
+              introduce the prominent contenders who have risen to prominence in
+              this crucial election.
+            </p>
+            <div class="scroll-arrow bounce">
+              <i
+                id="title-scroll-arrow"
+                class="fa-solid fa-angles-down fa-2x"
+              ></i>
+            </div>
+          </div>
+        </div>
+        <!--END CANDIDATE INTRO-->
+
+        <!-- BEGIN 2024 CANDIDATE BIOS -->
+        <div class="section" id="section-4">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-3 mx-auto text-center">
+                  <h1>2024 Candidates</h1>
+                  <div class="redBlock underline"></div>
+                  <p
+                    id="candidate-instruction"
+                    style="color: transparent; font-size: large"
+                  >
+                    Click on a Candidate to Learn More
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 text-center" id="candidate-info"></div>
+            </div>
+          </div>
+        </div>
+        <!-- END 2024 CANDIDATE BIOS -->
+
+        <!-- BEGIN CANDIDATE VOLUME -->
+        <div class="section">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-6 mx-auto text-center">
+                  <h1>Candidate Coverage Volume</h1>
+                  <div class="redBlock underline"></div>
+                </div>
+              </div>
+            </div>
+            <div
+              id="volume-bubbles"
+              style="display: flex; justify-content: center"
+            ></div>
+            <div
+              id="legend-container"
+              style="display: flex; justify-content: center"
+            ></div>
+          </div>
+        </div>
+        <!-- END CANDIDATE VOLUME -->
+
+        <div class="section" id="section-6">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-6 mx-auto text-center">
+                  <h1>Candidate Coverage Sentiment</h1>
+                  <div class="redBlock underline"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div
+                class="col-md-8 text-center"
+                id="candidate-sentiment-bars"
+              ></div>
+              <div class="col-md-4 text-center" id="avg-sentiment-container">
+                <div class="row">
+                  <div
+                    class="shadow p-3 mb-5 bg-white rounded col-md-12"
+                    id="avg-sentiment-info"
+                  >
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="inlineRadioOptions"
+                        id="show-all-sentiment"
+                        value="option1"
+                        checked
+                      />
+                      <label class="form-check-label" for="inlineRadio1"
+                        >All Candidates</label
+                      >
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="inlineRadioOptions"
+                        id="poll-leaders-sentiment"
+                        value="option2"
+                      />
+                      <label class="form-check-label" for="inlineRadio2"
+                        >Poll Leaders</label
+                      >
+                    </div>
+                    <div>
+                      <p
+                        style="text-align: left"
+                        id="candidate-sentiment-description"
+                      ></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--BEGIN BUMP CHART-->
+        <div class="section" id="section-7">
+          <div class="container">
+            <div class="col-md-4 mx-auto text-center">
+              <h1>Changing Winds</h1>
+              <div class="redBlock underline"></div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mx-auto text-center">
+                <h3 class="dropdown-textfield">
+                  How has the
+                  <span class="form-group">
+                    <select class="form-control" id="bump-chart-selection">
+                      <option value="volume">volume</option>
+                      <option value="sentiment">sentiment</option>
+                    </select>
+                  </span>
+                  of candidate coverage changed over time?
+                </h3>
+              </div>
+            </div>
+
+            <div class="row" id="bump-chart-row">
+              <div class="col-12" id="bumpchartcolumn">
+                <div id="bump-chart-area"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END BUMP CHART-->
+
+        <div class="section" id="section-8">
+          <div class="container text-center" id="media-analysis">
+            <h1>The Media</h1>
+            <p>
+              In the 2024 presidential election, the media is the nation's
+              political compass. It informs, shapes narratives, and holds the
+              key to an informed electorate, playing an indispensable role in
+              our democracy's journey.
+            </p>
+            <div class="scroll-arrow bounce">
+              <i
+                id="title-scroll-arrow"
+                class="fa-solid fa-angles-down fa-2x"
+              ></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="section-9">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-6 mx-auto text-center">
+                  <h1>
+                    Sentiment by Network<sup
+                      ><span style="font-family: sans-serif">*</span></sup
+                    >
+                  </h1>
+                  <div class="redBlock underline"></div>
+                  <h3>What percentage of reports are positive?</h3>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 mx-auto text-center" id="sbn-slider">
+                <div id="slider"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div
+                class="col-md-12"
+                id="by-network"
+                style="text-align: center"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="section-scatterplot">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 mx-auto text-center" id="sbfHeader">
+                <h1>Candidate Coverage by Network</h1>
+                <div class="redBlock underline"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 mx-auto text-center">
+                <div id="sbfSlider"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 text-center">
+                <div class="row" id="network-bar-chart-area"></div>
+                <div class="row">
+                  <button type="button" id="sbfButton">
+                    Reset Visualization to Include All Networks
+                  </button>
+                </div>
+              </div>
+              <div
+                class="col-auto text-center"
+                id="sentiment-by-frequency"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="section-impact-intro">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-8 mx-auto text-center">
+                  <h1>Uncover the Impact: Your Interactive Analysis</h1>
+                </div>
+                <div class="col-8 mx-auto text-center redBlock underline"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="shadow p-3 mb-5 bg-white rounded col-6" id="impact-event-intro">
+                <p>
+                  Delve into the dynamics of political influence with our
+                  interactive visualization. As you've journeyed through the ebb
+                  and flow of the election campaign, you might have pondered the
+                  'whys' behind the sudden rises and falls of candidates. Here,
+                  we empower you to uncover these mysteries.
+                </p>
+                <p>
+                  Select from key political events, choose the candidates of interest, and
+                  decide whether to track coverage sentiment or volume.
+                </p>
+                <p>
+                  This tool is designed to bring your observations full circle,
+                  offering you the reins to explore the intricate web of
+                  political events and their tangible effects on public
+                  perception and media coverage. Discover how specific events
+                  have shaped the election narrative in real-time. Your insights
+                  await.
+                </p>
+              </div>
+              <div class="col-md-6">
+                <img src="img/breakingnews.png" id="breaking-news-image" class="img-fluid" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section" id="section-impact-event">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-6 mx-auto text-center">
+                <h1>Impactful Events</h1>
+                <div class="redBlock underline"></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="tooltip-lastslide"
+            style="opacity: 0; position: absolute"
+          ></div>
+          <div class="row">
+            <div class="col-8" id="impact-event-chart-container">
+              <div id="impact-event-chart-area"></div>
+              <div class="row auto" id="timelinerow">
+                <div id="timeline-window-area"></div>
+              </div>
+            </div>
+            <div class="col-3" id="candidate-selections-box">
+              <div class="row title-area" id="settingstitle">
+                <div class="col-md-12 mx-auto text-center">
+                  <span class="adjustments-title"
+                  >Make Your Own Adjustments</span
+                  >
+                </div>
+              </div>
+              <div
+                id="event-legend-container"
+                class="container-fluid legend-section"
+              >
+                <h5 class="settingsQ">How did the...</h5>
+                <div class="row justify-content-center">
+                  <div class="col-auto text-center">
+                    <div class="form-group">
+                      <!-- Select box for choosing the event -->
+                      <select class="form-control" id="event-selection">
+                        <option value="20230824">
+                          Trump Georgia Arrest (August 24th, 2023)
+                        </option>
+                        <option value="20231007">
+                          Hamas Invaision of Israel (October 8th, 2023)
+                        </option>
+                        <option value="20230823">
+                          First GOP Debate (August 23rd, 2023)
+                        </option>
+                        <option value="20230927">
+                          Second GOP Debate (September 27th, 2023)
+                        </option>
+                        <option value="20231108">
+                          Third GOP Debate (November 8th, 2023)
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="metric-legend-container" class="container-fluid legend-section">
+                <div class="col-md-12 mx-auto text-center">
+                  <h5 class="dropdown-textfield">
+                    Impact the
+                    <span class="form-group">
+                    <select class="form-control" id="line-stat-selection-impact">
+                      <option value="volume">Number of Mentions</option>
+                      <option value="sentiment">Sentiment of Coverage</option>
+                    </select>
+                  </span>
+                  </h5>
+                </div>
+              </div>
+
+              <div
+                id="candidate-legend-container"
+                class="container-fluid legend-section"
+              >
+                <h5>For (select candidates):</h5>
+                <div id="legend-panel-row1" class="row mb-3">
+                  <div class="col-2 candidate_containers">
+                    <img
+                      src="img/candidate_portraits/biden.png"
+                      alt=""
+                      id="biden_button"
+                    />
+                    <span class="candidate-name">Biden</span>
+                  </div>
+                  <div class="col-2 candidate_containers">
+                    <img
+                      src="img/candidate_portraits/christie.png"
+                      alt=""
+                      id="christie_button"
+                    />
+                    <span class="candidate-name">Christie</span>
+                  </div>
+                  <div class="col-2 candidate_containers">
+                    <img
+                      src="img/candidate_portraits/desantis.png"
+                      alt=""
+                      id="desantis_button"
+                    />
+                    <span class="candidate-name">Desantis</span>
+                  </div>
+                  <div class="col-2 candidate_containers">
+                    <img
+                      src="img/candidate_portraits/haley.png"
+                      alt=""
+                      id="haley_button"
+                    />
+                    <span class="candidate-name">Haley</span>
+                  </div>
+                </div>
+                <div id="legend-panel-row2" class="row mb-3">
+                  <div class="col-2 candidate_containers">
+                    <img
+                      src="img/candidate_portraits/pence.png"
+                      alt=""
+                      id="pence_button"
+                    />
+                    <span class="candidate-name">Pence</span>
+                  </div>
+                  <div class="col-2 candidate_containers">
+                    <img
+                      src="img/candidate_portraits/ramaswamy.png"
+                      alt=""
+                      id="ramaswamy_button"
+                    />
+                    <span class="candidate-name">Ramaswamy</span>
+                  </div>
+                  <div class="col-2 candidate_containers">
+                    <img
+                      src="img/candidate_portraits/scott.png"
+                      alt=""
+                      id="scott_button"
+                    />
+                    <span class="candidate-name">Scott</span>
+                  </div>
+                  <div class="col-2 candidate_containers">
+                    <img
+                      src="img/candidate_portraits/trump.png"
+                      alt=""
+                      id="trump_button"
+                    />
+                    <span class="candidate-name">Trump</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--BEGIN CONCLUSION-->
+        <div class="section" id="conclusion">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-6 text-center">
+                  <h1>What Did We Learn?</h1>
+                </div>
+                <div class="col-6 redBlock underline"></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="shadow p-3 mb-5 bg-white rounded col-6" id="conclusion-col">
+                Many of our beliefs regarding the shortcomings of television
+                media were confirmed:
+
+                <ul class="conclusion-list">
+                  <li>
+                    Candidates with lower name recognition were not only less
+                    likely to be covered, but in some cases received 10 to 100
+                    times less coverage
+                  </li>
+                  <li>
+                    More traditionally partisan networks such as Fox News, CNN,
+                    and MSBNC tended to focus on negative coverage of
+                    adversarial candidates
+                  </li>
+                  <li>
+                    There is a clear incumbency advantage in the media. The coverage
+                    of both President Biden and former President Trump dwarf that of
+                    the candidates.
+                  </li>
+                </ul>
+
+                So, what can we do to avoid falling victim to the media frenzy?
+
+                <ul class="conclusion-list">
+                  <li>
+                    Conduct independent research on the candidates: visit their
+                    campaign sites, read policy proposals, and watch or listen
+                    to interviews and debates
+                  </li>
+                  <li>
+                    Seek out alternative, less sensational sources of
+                    information, to include print media and long-form content
+                    such as podcasts
+                  </li>
+                  <li>
+                    If you find a candidate you are passionate about, spread the
+                    word! Talk to friends and family, donate time or money to
+                    their campaign, and of course, VOTE come Election Day!
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <img src="img/vote.png" id="ballot-box" class="img-fluid" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END CONCLUSION-->
+
+        <!--TEAM PROFILES-->
+        <div class="section">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-6 mx-auto text-center">
+                  <h1>Team Members</h1>
+                </div>
+                <div
+                  class="col-md-4 mx-auto text-center redBlock underline"
+                ></div>
+              </div>
+            </div>
+            <div class="row" style="padding-block: 50px">
+              <div class="col-md-12 text-center" id="team-profiles"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-6 mx-auto text-center">
+                  <h1>Acknowledgments</h1>
+                </div>
+                <div
+                  class="col-md-4 mx-auto text-center redBlock underline"
+                ></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 mx-auto text-center">
+                <div
+                  class="shadow p-3 mb-5 bg-white rounded col-md-8 mx-auto text-center"
+                  id="ack-content"
+                >
+                  <p>
+                    We do not own the rights to any of the video, audio, or
+                    images used in this project. This project is for educational
+                    use only and may not be used for commercial purposes.
+                  </p>
+
+                  <p>
+                    Thank you to the Internet Archive and its supporters for
+                    creating and continuously updating its television news
+                    archive. We encourage everyone to check out the
+                    <a href="https://archive.org/details/tv" target="_blank"
+                      >archive</a
+                    >
+                    and play around with different search terms and date ranges.
+                  </p>
+
+                  <p>
+                    Finally, we'd like to thank our professor Pavlos Protopapas,
+                    our teaching fellow Tale Lokvenec, and the rest of the
+                    teaching staff for equipping with the tools to create this project.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--'Breaking News' bar at the bottom-->
+    <div class="row">
+      <div class="news-container" id="breaking-news" style="visibility: hidden">
+        <div class="title">Breaking News</div>
+        <ul>
+          <li>PRIMARIES AND CAUCUSES</li>
+          <li>Jan 15: Iowa (R)</li>
+          <li>Jan 23: New Hampshire</li>
+          <li>February 3: South Carolina (D)</li>
+          <li>February 6: Nevada (D)</li>
+          <li>February 8: Nevada (R)</li>
+          <li>February 24: South Carolina (R)</li>
+          <li>February 27: Michigan</li>
+          <li>March 2: Idaho (R), Missouri (R)</li>
+          <li>March 4: North Dakota (R)</li>
+          <li>
+            March 5 (Super Tuesday): Alabama, Alaska (R), Arizona, California,
+            Colorado, Iowa (D), Maine, Massachusetts, Minnesota, North Carolina,
+            Oklahoma, Tennessee, Texas, Utah, Vermont, Virginia
+          </li>
+          <li>March 12: Georgia, Hawaii (R), Mississippi, Washington</li>
+          <li>March 19: Arizona, Florida, Illinois, Kansas, Ohio</li>
+          <li>March 23: Louisiana, Missouri (D)</li>
+          <li>
+            April 2: Connecticut, Delaware, New York, Rhode Island, Wisconsin
+          </li>
+          <li>April 6: Alaska (D), Hawaii (D), North Dakota (D)</li>
+          <li>April 13: Wyoming (D)</li>
+          <li>April 23: Pennsylvania</li>
+          <li>May 7: Indiana</li>
+          <li>May 14: Maryland, Nebraska, West Virginia</li>
+          <li>May 21: Kentucky, Oregon</li>
+          <li>May 25: Idaho (D)</li>
+          <li>June 4: Montana, New Jersey, New Mexico, South Dakota</li>
+          <li>REPUBLICAN CONVENTION: July 15 - 18 (Milwaukee, WI)</li>
+          <li>DEMOCRATIC CONVENTION: August 19 - 22 (Chicago, IL)</li>
+          <li>
+            PRESIDENTIAL DEBATES: September 16 (San Marcos, TX), October 1
+            (Petersburg, VA), October 9 (Salt Lake City, UT)
+          </li>
+          <li>GENERAL ELECTION: November 5</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- BEGIN CANDIDATE MODAL -->
+    <div
+      class="modal fade"
+      id="candidate-modal"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="candidateModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h3
+              class="modal-title modal-title w-100"
+              id="candidate-name-modal"
+            ></h3>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-12">
+                <img
+                  id="candidate-modal-image"
+                  src=""
+                  alt="Candidate Image"
+                  class="img-fluid rounded-0"
+                />
+              </div>
+            </div>
+            <div class="row text-center" style="padding: 1em">
+              <h5>Media Coverage</h5>
+            </div>
+            <div class="row">
+              <div class="col-md-6 text-center">
+                <span id="candidate-modal-mentions"></span>
+                <h6 style="padding: 0.5em">
+                  Mentions
+                  <span
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="A mention is defined as a reference to a candidate by a major news network. Every week, we scrape the internet archives to detect instances where a candidate is mentioned and make a record."
+                    ><i class="fa-solid fa-circle-info fa-xs"></i
+                  ></span>
+                </h6>
+              </div>
+              <div class="col-md-6 text-center">
+                <span id="candidate-modal-positive-percent"></span>
+                <h6 style="padding: 0.5em">
+                  Positive
+                  <span
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-title="This number represents the percentage of mentions identified as positive. A machine learning model, trained in text sentiment classification, determines whether each mention is positive or negative."
+                  >
+                    <i class="fa-solid fa-circle-info fa-xs"></i>
+                  </span>
+                </h6>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <p id="candidate-modal-bio"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END CANDIDATE MODAL -->
+
+    <!-- BEGIN VIDEO MODAL -->
+    <div
+      class="modal fade"
+      id="introModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <video width="100%" controls playsinline>
+              <source
+                src="img/intro_page/informational_vid.mp4"
+                type="video/mp4"
+              />
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END VIDEO MODAL -->
+
+    <!-- Network Intro Commit -->
+    <div class="modal fade" tabindex="-1" id="network-modal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header text-center">
+            <h5 class="modal-title">
+              Click on a Network to Filter The Candidates
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              We recommend exploring how both the volume and sentiment of
+              candidate coverage varies by network. Which candidates are
+              discussed most on Fox compared to CNN and MSNBC? Is there a clear
+              difference in positive mentions by network?
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- External Scripts -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TimelineMax.min.js"
+      integrity="sha256-fIkQKQryItPqpaWZbtwG25Jp2p5ujqo/NwJrfqAB+Qk="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"
+      integrity="sha256-lPE3wjN2a7ABWHbGz7+MKBJaykyzqCbU96BJWjio86U="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.20/fullpage.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.4.0/nouislider.min.js"
+      integrity="sha512-mZXUH8DAODwCHioWP3gltQwa953LbABMlzTYwYkKqv8eNxOk37B1HgNNuCMfFxgrpW5C34WJbxPDcM58+s1dJA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <!--Internal Scripts-->
+    <script src="js/constants.js"></script>
+    <script type="module" src="js/white_house/white-house.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/team.js"></script>
+    <script src="js/tooltips.js"></script>
+    <script src="js/by-network.js"></script>
+    <script src="js/coloredNetwork.js"></script>
+    <script src="js/candidate-intro.js"></script>
+    <script src="js/candidates.js"></script>
+    <script src="js/coverage-volume-bubbles.js"></script>
+    <script src="js/candidate-sentiment-bars.js"></script>
+    <script src="js/sentiment-by-frequency.js"></script>
+    <script src="js/bump-chart.js"></script>
+    <script src="js/impactful-events.js"></script>
+    <script src="js/project-intro.js"></script>
+  </body>
+</html>

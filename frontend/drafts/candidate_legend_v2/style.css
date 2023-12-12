@@ -1,0 +1,119 @@
+#impact-event-chart-area {
+    /*margin: 1.5rem;*/
+    /*!*border-radius: 5px;*!*/
+    /*background-color: #f5f5f5;*/
+    /*height: 600px;*/
+    /*text-align: center;*/
+    /*padding-top: 2rem;*/
+}
+
+.legend-section.row {
+    display: flex;
+    justify-content: space-between; /* This will space out the items evenly */
+    align-items: center;
+}
+
+.candidate_containers {
+    position: relative; /* Needed to position the text over the image */
+    /* Calculate width: 100% / 5 images per row - spacing */
+    /* Adjust '2%' to increase or decrease spacing between images */
+    width: calc(20% - 2%);
+    margin: 0 1%; /* Half of 2% on each side for equal spacing */
+    text-align: center; /* To center the images within the containers */
+}
+
+.candidate_containers img {
+    width: 100%; /* Make the image take the full width of its container */
+    height: auto; /* Keep the aspect ratio of the image */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.9s ease; /* Smooth transition for enlarging the image */
+}
+
+
+.highlighted {
+    opacity: 1 !important;
+    stroke-width: 3px !important;
+}
+
+.dimmed {
+    opacity: 0.2;
+}
+
+
+#candidate-selections-box{
+    background-color: #dec9c9;
+    border-radius: 5px;
+    text-align:center;
+    /*margin: 5%;*/
+}
+
+.legend-section {
+    background-color: whitesmoke;
+    border-radius: 5px;
+    margin-bottom: calc(1.5rem + 1px);
+    padding: 1rem;
+    padding-top: .5rem;
+}
+
+.blurred-image {
+    /*filter: blur(1px);*/
+    /*filter: grayscale(1);*/
+    filter: brightness(0.5);
+    background-color: #000000;
+    /*transition: transform 0.9s ease;*/
+    transition: opacity 0.3s; /* Smooth transition for fading in/out */
+    /*blur(10px);*/
+}
+
+.candidate_containers img:hover {
+    transform: scale(1.5); /* Enlarges the image to 110% of its size on hover */
+    /*filter: blur(1px);*/
+}
+
+.candidate_containers img.hovered {
+    transform: scale(1.5); /* Enlarges the image to 150% of its size */
+    /*filter: blur(1px);*/
+}
+
+
+.candidate-name {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.9s ease;
+    color: white;
+    text-shadow: black 0 0 5px;
+    font-size: 6px; /* Adjust size as needed */
+    visibility: hidden;
+    pointer-events: none; /* Prevents the text from interfering with image clicks */
+}
+.candidate_containers.hovered img {
+    transform: scale(1.5); /* Enlarges the image */
+    /*filter: blur(.3px);*/
+    /*filter: blur(1px);*/
+    box-shadow: inset white 0 0 3px;
+}
+
+
+.candidate_containers img:hover + .candidate-name {
+    transform: translate(-50%, -50%) scale(1.5); /* Scale up the text on hover */
+    visibility: visible;
+    text-shadow: black 0 0 3px;
+}
+.legend-item {
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.tooltip-lastslide {
+    background-color: #fff;
+    border: 1px solid #d4d4d4;
+    padding: 5px;
+    border-radius: 5px;
+    pointer-events: none; /* Don't let the tooltip block cursor events */
+    position: absolute; /* Required for positioning */
+    opacity: 0; /* Start hidden */
+    transition: opacity 0.3s; /* Smooth transition for fading in/out */
+}

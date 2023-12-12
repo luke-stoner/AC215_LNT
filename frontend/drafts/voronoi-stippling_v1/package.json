@@ -1,0 +1,14 @@
+{
+  "name": "@codedragon491/voronoi-stippling/3",
+  "main": "6c38a28793cfac80@413.js",
+  "version": "413.0.0",
+  "homepage": "https://observablehq.com/@codedragon491/voronoi-stippling/3",
+  "author": {
+    "name": "Julia Trefas",
+    "url": "https://observablehq.com/@codedragon491"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}

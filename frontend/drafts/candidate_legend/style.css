@@ -1,0 +1,20 @@
+.candidate_containers {
+    border-radius: 50%; /* Makes it circular */
+    width: 15px; /* Adjust size as needed */
+    height: 15px; /* Adjust size as needed */
+    background-color: grey; /* Default non-selected color */
+    /* Add other styling as needed (like padding, margin, etc.) */
+}
+
+.candidate-container.selected {
+    background-color: blue; /* Change to the color representing the candidate */
+    /* Adjust the color dynamically via JavaScript based on the candidate */
+}
+
+.candidate_containers img {
+    border-radius: 50%; /* Makes it circular */
+    width: 15px; /* Adjust size as needed */
+    height: 15px; /* Adjust size as needed */
+    background-color: grey; /* Default non-selected color */
+    /* Add other styling as needed (like padding, margin, etc.) */
+}
