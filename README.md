@@ -1,6 +1,8 @@
 Team LNT: AC215 Final Project
 ==============================
 
+Team Members: Luke Stoner, Andrew Sullivan
+
 GitHub File Structure:
 ------------
 
@@ -134,3 +136,21 @@ Data Description:
 - label: Final sentiment label of the mention (0=negative, 1=positive)
 
 
+Use of our Repository:
+-------------
+We will now walk through the steps you can take to reproduce our app "Race for the White House."
+We recommend cloning this repository to start.
+
+### Data Scraping
+To create an inital dataset, run the `scrape.py` script in the scrape container. Specify the dates the you are interested in exploring. 
+For our app, we started our dataset with mentions as early as June 1st. 
+
+### Modeling
+Use either the `label.py` or `label.ipynb` to create and train the sentiment anaylsis model. Personally, we used a VM instance on Vertex AI
+workbench to craft our jupyter notebooks and initalize the model
+
+### Model Deployment
+Once a final model is created, it should be stored in a GCP Storage Bucket to be accessed by the deployment app. `App.py` in our deploy container
+specifies a Flask app that takes text instances as input, then imports the model from GCP to provide all text a postive and negative sentiment score.
+
+With this app created and containerized, upload the docker image to Google Artifact Registry. 
