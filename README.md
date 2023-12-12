@@ -210,11 +210,18 @@ The two workflows are described below.
 - Create a new version of our `lnt-deploy-gpu` model on Vertex AI
 - Deploy the new model version to our `lnt-endpoint-gpu` endpoint
 
-(`kube.yml`) On new pushes to `src/deploy` or `src/label`:
-- Build a new Docker image for the deployment container
-- Push the image to Google Artifact Registry
-- Create a new version of our `lnt-deploy-gpu` model on Vertex AI
-- Deploy the new model version to our `lnt-endpoint-gpu` endpoint
+(`kubernetes.yml`) On new pushes to `api-service` or `frontend`:
+- Build a new Docker image for the API and frontend containers
+- Push the images to Docker Hub
+- Deploy the new images to our Kubernetes cluster
+
+With these two workflows, we first ensure that our endpoint always makes use the most up to date version of sentiment analysis model. Additionally, we ensure that end users
+always have access to the most recent version of our web app.
 
 
+License and Disclaimer:
+-------------
+This project is licensed under a GNU General Public License. See the LICENSE file for details.
+
+We do not own the rights to any of the video, audio, or images used in this project. This project is for educational use only and may not be used for commercial purposes.
 
