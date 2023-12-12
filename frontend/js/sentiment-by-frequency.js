@@ -6,11 +6,11 @@ d3.csv("data/labeled.csv", row => {
     return row
 }).then(rawData => {
     // Define margins
-    const sbfMargin = {top: 30, right: 30, bottom: 50, left: 50};
+    const sbfMargin = {top: 30, right: 30, bottom: 50, left: 60};
 
     // Assuming you have predefined the overall width and height of your SVG
     const sbfWidth = 800; // Adjust as needed
-    const sbfHeight = 500; // Adjust as needed
+    const sbfHeight = 450; // Adjust as needed
 
     // Effective width and height after accounting for margins
     const sbfEffectiveWidth = sbfWidth - sbfMargin.left - sbfMargin.right;
@@ -25,9 +25,9 @@ d3.csv("data/labeled.csv", row => {
         .attr("transform", "translate(" + sbfMargin.left + "," + sbfMargin.top + ")");
 
     // Set margin, width, height
-    let networkMargin = {top: 30, right: 30, bottom: 50, left: 55};
+    let networkMargin = {top: 30, right: 30, bottom: 50, left: 60};
     let networkWidth = 400 - networkMargin.left - networkMargin.right;
-    let networkHeight = 400 - networkMargin.top - networkMargin.bottom;
+    let networkHeight = 450 - networkMargin.top - networkMargin.bottom;
 
     // initialize svg drawing space
     let network_svg = d3.select("#network-bar-chart-area").append("svg")
@@ -73,7 +73,7 @@ d3.csv("data/labeled.csv", row => {
             const selectedMinYear = new Date(+values[0]);
             const selectedMaxYear = new Date(+values[1]);
 
-            filtered_date_data = data.filter(
+            filtered_date_data = rawData.filter(
                 (d) => d.date >= selectedMinYear && d.date <= selectedMaxYear
             );
 
@@ -83,17 +83,18 @@ d3.csv("data/labeled.csv", row => {
     }
 
     // Set default value for clicked network to 'all'
-    let clickedNetwork = 'all'
+    let clickedNetwork = null
 
     // Add event listener to the button
     const sbfButton = document.getElementById('sbfButton');
 
     sbfButton.addEventListener('click', function() {
         // Set clickedNetwork value to 'all'
-        clickedNetwork = 'all'
+        clickedNetwork = null
 
-        // Update the network variable to use all networks
+        // Update the visualizations
         update_sbf_visualization();
+        update_network_visualization();
     });
 
     // Initialize Slider
@@ -112,7 +113,7 @@ d3.csv("data/labeled.csv", row => {
         // Filter data by network
         let filteredData;
 
-        if (network === 'all') {
+        if (network === null) {
             // If 'all' is selected, do not filter the dataset
             filteredData = filtered_date_data;
         } else {
@@ -165,6 +166,12 @@ d3.csv("data/labeled.csv", row => {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
+        // Remove existing X-axis title before creating a new one
+        sbf_svg.selectAll(".x-axis-title").remove();
+
+        // Remove existing Y-axis title before creating a new one
+        sbf_svg.selectAll(".y-axis-title").remove();
+
         // Update the X axis if it exists, else create it
         xAxis.enter()
             .append("g")
@@ -182,24 +189,27 @@ d3.csv("data/labeled.csv", row => {
             .merge(yAxis)
             .transition() // Add a transition
             .duration(750) // 750ms transition
-            .call(d3.axisLeft(yScale));
-
-        // Add X Axis label
-        sbf_svg.append("text")
-            .attr("transform",
-                "translate(" + (sbfEffectiveWidth / 2) + " ," +
-                (sbfEffectiveHeight + sbfMargin.bottom - 10) + ")")
-            .style("text-anchor", "middle")
-            .text("Number of Mentions");
+            .call(d3.axisLeft(yScale)
+                .tickFormat(d3.format(".0%")));
 
         // Add Y Axis label
         sbf_svg.append("text")
+            .attr("class", "y-axis-title") // Add class to remove existing Y-axis title later
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - sbfMargin.left + 5)
             .attr("x", 0 - (sbfEffectiveHeight / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("Average Sentiment");
+            .text("Positive Mentions"); // Empty text, or you can add a new Y-axis title here
+
+        // Add X Axis label
+        sbf_svg.append("text")
+            .attr("class", "x-axis-title") // Add class to remove existing X-axis title later
+            .attr("transform",
+                "translate(" + (sbfEffectiveWidth / 2) + " ," +
+                (sbfEffectiveHeight + sbfMargin.bottom - 10) + ")")
+            .style("text-anchor", "middle")
+            .text("Number of Mentions");
 
         // Update background circles with transition
         const circles = sbf_svg.selectAll(".backgroundCircles")
@@ -249,7 +259,12 @@ d3.csv("data/labeled.csv", row => {
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                tooltip.html(`${d.name}<br/>Number of Mentions: ${d.frequency}<br/>Average Sentiment: ${d.avg_sentiment.toFixed(2)}`)
+                tooltip.html(`<div style="text-align: center; font-weight: bold;">
+                                ${d.name}
+                                </div>
+                                Number of Mentions: ${d.frequency.toLocaleString()}
+                                <br/>
+                                Positive Mentions: ${d3.format(".0%")(d.avg_sentiment)}`)
                     .style("left", (event.pageX + 15) + "px")
                     .style("top", (event.pageY - 30) + "px");
             })
@@ -322,7 +337,16 @@ d3.csv("data/labeled.csv", row => {
         network_svg
             .append("g")
             .attr("transform", `translate(0,${networkHeight})`)
-            .call(d3.axisBottom(x).ticks(5));
+            .call(d3.axisBottom(x).tickFormat(d3.format(".0%")));
+
+        // Add X axis title
+        network_svg.append("text")
+            .attr("class", "x-axis-title") // Add class to remove existing X-axis title later
+            .attr("transform",
+                "translate(" + (networkWidth / 2) + " ," +
+                (networkHeight+ networkMargin.bottom - 10) + ")")
+            .style("text-anchor", "middle")
+            .text("Positive Mentions");
 
         // Update Y axis domain based on new data
         y.domain(data.map((d) => d.network));
@@ -336,35 +360,26 @@ d3.csv("data/labeled.csv", row => {
 
         // Add bars with transition
         const bars = network_svg
-            .selectAll("myRect")
-            .data(data)
-            .enter()
-            .append("rect")
-            .attr("x", x(0))
-            .attr("y", (d) => y(d.network))
-            .attr("height", y.bandwidth())
-            .attr("fill", (d) => d.color);
-
-        bars
-            .transition()
-            .duration(TRANSITION_DURATION)
-            .attr("width", (d) => x(d.avg_sentiment));
-
-        // Add bar extensions with transition
-        const barExtensions = network_svg
-            .selectAll("barExtensions")
+            .selectAll("bars")
             .data(data)
             .enter()
             .append("rect")
             .attr("x", x(0) - y.bandwidth() / 2)
             .attr("y", (d) => y(d.network))
             .attr("height", y.bandwidth())
-            .attr("fill", (d) => d.color);
+            .attr("fill", (d) => d.color)
+            .attr('opacity', (d) => {
+                if (!clickedNetwork || clickedNetwork === d.network) {
+                    return 1;
+                } else {
+                    return 0.5;
+                }
+            });
 
-        barExtensions
+        bars
             .transition()
             .duration(TRANSITION_DURATION)
-            .attr("width", y.bandwidth());
+            .attr("width", (d) => x(d.avg_sentiment) + y.bandwidth() / 2);
 
         // Add background circles with transition
         const backgroundCircles = network_svg
@@ -377,7 +392,14 @@ d3.csv("data/labeled.csv", row => {
             .attr("r", 0)
             .attr("fill", "white")
             .attr("stroke", (d) => d.color)
-            .attr("stroke-width", 3);
+            .attr("stroke-width", 3)
+            .attr('stroke-opacity', (d) => {
+                if (!clickedNetwork || clickedNetwork === d.network) {
+                    return 1;
+                } else {
+                    return 0.5;
+                }
+            });
 
         backgroundCircles
             .transition()
@@ -395,7 +417,14 @@ d3.csv("data/labeled.csv", row => {
             .attr("y", (d) => y(d.network))
             .attr("height", 0)
             .attr("width", 0)
-            .attr("clip-path", "circle()");
+            .attr("clip-path", "circle()")
+            .attr('opacity', (d) => {
+                if (!clickedNetwork || clickedNetwork === d.network) {
+                    return 1;
+                } else {
+                    return 0.5;
+                }
+            });
 
         images
             .transition()
@@ -404,19 +433,31 @@ d3.csv("data/labeled.csv", row => {
             .attr("width", y.bandwidth());
 
         // Add click event handling for bars and images
-        bars.on('click', function(event, d) {
-            // Get the network value associated with the clicked bar
-            clickedNetwork = d.network;
-
-            // Call the update_sbf_visualization function and pass the clickedNetwork value
-            update_sbf_visualization();
+        bars.on('mouseover', function() {
+            // Change pointer to cursor on hover
+            d3.select(this).classed('cursor-mouseover', true);
         });
-        images.on('click', function(event, d) {
-            // Get the network value associated with the clicked bar
-            clickedNetwork = d.network;
 
-            // Call the update_sbf_visualization function and pass the clickedNetwork value
+        images.on('mouseover', function() {
+            // Change pointer to cursor on hover
+            d3.select(this).classed('cursor-mouseover', true);
+        });
+
+        // Add click event handling for bars and images
+        bars.on('click', function(event, d) {
+            clickedNetwork = (clickedNetwork === d.network) ? null : d.network;
+
+            // Update the visualizations
             update_sbf_visualization();
+            update_network_visualization();
+        });
+
+        images.on('click', function(event, d) {
+            clickedNetwork = (clickedNetwork === d.network) ? null : d.network;
+
+            // Update the visualizations
+            update_sbf_visualization();
+            update_network_visualization();
         });
     }
 });

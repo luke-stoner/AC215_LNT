@@ -39,7 +39,6 @@ class CandidateIntroduction {
     const darkYellow = [200, 200, 0];
     const darkGreen = [0, 100, 0];
 
-    console.log(normalizedPercentage);
     let color;
     if (normalizedPercentage <= 0.5) {
       const t = normalizedPercentage * 2; // Scale to 0-1
@@ -62,18 +61,36 @@ class CandidateIntroduction {
 
   initializeSVG() {
     this.width = 900;
-    this.height = 600;
-    this.margin = 20;
-    this.circleRadius = 60;
+    this.height = 550;
+    this.margin = 40;
+    this.circleRadius = 50;
     this.borderThickness = 7;
-    this.circlePadding = 30;
-    this.columns = Math.floor(
-      (this.width - 2 * this.margin) /
-        (2 * this.circleRadius + this.circlePadding)
-    );
-    this.rows = Math.ceil(this.candidates.length / this.columns);
-    this.colWidth = (this.width - 2 * this.margin) / this.columns;
-    this.rowHeight = (this.height - 2 * this.margin) / this.rows;
+    this.circlePadding = 25;
+    this.columns = 5;
+    this.rows = 3;
+
+    // Horizontal spacing calculations remain the same
+    let totalCircleWidth =
+      2 * this.circleRadius * this.columns +
+      this.circlePadding * (this.columns - 1);
+    this.colWidth =
+      (this.width - 2 * this.margin - totalCircleWidth) / (this.columns - 1) +
+      2 * this.circleRadius +
+      this.circlePadding;
+
+    // Adjust vertical spacing
+    let smallerVerticalPadding = 15; // Reduced vertical padding
+    let totalCircleHeight =
+      2 * this.circleRadius * this.rows +
+      smallerVerticalPadding * (this.rows - 1);
+
+    // Recalculate rowHeight for the smaller vertical spacing
+    this.rowHeight =
+      2 * (this.height -
+        2 * this.margin -
+        totalCircleHeight +
+        smallerVerticalPadding) /
+      (this.rows - 1);
 
     this.svg = d3
       .select("#candidate-info")
@@ -275,7 +292,7 @@ class CandidateIntroduction {
     const legend = this.svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${legendX}, ${this.height - this.margin})`);
+      .attr("transform", `translate(${legendX + this.circlePadding}, ${this.height - this.margin})`);
 
     const legendItems = legend
       .selectAll(".legend-item")
