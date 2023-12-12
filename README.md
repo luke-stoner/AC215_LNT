@@ -179,3 +179,16 @@ of our candidate and network visualizations:
 <img width="800" alt="Screenshot 2023-12-12 at 12 34 53 AM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/d6dcc01a-51f3-4087-a511-a459fe733ed2">
 
 <img width="600" alt="Screenshot 2023-12-12 at 12 33 55 AM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/8cabda0b-dd1c-4b32-8edb-a3b18089121e">
+
+### Kubernetes Deployment
+
+After testing the API and frontend locally and ensuring proper functionality, it's deploy each service to a Kubernetes cluster. We highly recommend using Google
+Kubernetes Engine to create and serve the cluster. This time, we found it easier to create the cluster using the command line rather than GCP's UI. The code below
+provides an example of how to create a basic cluster:
+
+gcloud container clusters create cluster-name \
+  --zone=your-preferred-zone \
+  --machine-type=n1-standard-2 \
+  --num-nodes=3
+
+
