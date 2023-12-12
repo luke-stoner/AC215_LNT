@@ -1,0 +1,45 @@
+name: Kubernetes Deployment
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+      - 'api-service/**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_NAME }} --password-stdin
+
+      - name: Build and push frontend Docker image
+        if: ${{ github.event_name == 'push' && github.event.path | contains('frontend/') }}
+        working-directory: frontend
+        run: ./docker-push.sh
+
+      - name: Prepare GCP Key
+        if: ${{ github.event_name == 'push' && github.event.path | contains('api-service/') }}
+        run: |
+          echo -n "${{ secrets.GCP_KEY }}" | base64 --decode > gcp-key.json
+          chmod 600 gcp-key.json
+
+      - name: Build and push API service Docker image
+        if: ${{ github.event_name == 'push' && github.event.path | contains('api-service/') }}
+        working-directory: api-service
+        run: ./docker-push.sh
+
+      - name: Deploy to Kubernetes
+        if: ${{ github.event_name == 'push' && (github.event.path | contains('frontend/') || github.event.path | contains('api-service/')) }}
+        working-directory: scaling
+        env:
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+          KUBE_CLUSTER: ${{ secrets.KUBE_CLUSTER }}
+        run: ./docker-shell.sh
