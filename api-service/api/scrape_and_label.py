@@ -199,7 +199,7 @@ client = aiplatform.gapic.PredictionServiceClient(client_options=client_options)
 # Fetch endpoint from vertex based on project, location, and ID
 endpoint = client.endpoint_path(project=project, location=location, endpoint=endpoint_id)
 
-def label(df, batch_size=100):
+def label(df, batch_size=50):
     '''
     Provided a pandas dataframe with all scraped mentions for the week, the function accesses
     our Vertex AI endpoint for prediction. Mentions are passed to the endpoint in batches of 
