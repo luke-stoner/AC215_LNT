@@ -24,6 +24,8 @@ const NETWORK_LOOKUP = {
   FOXNEWSW: "Fox News",
   KGO: "ABC Bay Area",
   KNTV: "NBC Bay Area",
+  KPIX: "CBS Bay Area",
+  KRON: "CW Bay Area",
   MSNBCW: "MSNBC",
   RT: "RT News",
 };

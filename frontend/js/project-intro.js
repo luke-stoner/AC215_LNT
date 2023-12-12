@@ -5,6 +5,11 @@ $(document).ready(function(){
         targetElement.not(targetElement[currentSlideIndex]).removeClass('active');
     }
 
+    // Initialize carousel with a very long interval
+    $('#carouselExampleIndicators').carousel({
+        interval: 999999999
+    });
+
     // Handle clicking on indicators
     $(".testimonial .indicators li").click(function(){
         var i = $(this).index();
@@ -37,19 +42,5 @@ $(document).ready(function(){
     // Optional: Update swiper-pagination span if needed
     $(".slider .swiper-pagination span").each(function(i){
         $(this).text(i+1).prepend("0");
-    });
-});
-
-// play video
-$(document).ready(function() {
-    $('.play-vid').click(function() {
-        $('#videoModal').modal('show');
-    });
-
-    // Optional: Stop video when modal is closed
-    $('#videoModal').on('hidden.bs.modal', function (e) {
-        var $video = $(this).find("video")[0];
-        $video.pause();
-        $video.currentTime = 0;
     });
 });

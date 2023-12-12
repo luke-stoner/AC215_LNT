@@ -23,7 +23,7 @@ class ByNetworkVisual {
     // Filter data for networks with more than 1000 records
     this.MINIMUM_THRESHOLD = 1000;
     const filteredData = data.filter(
-      (d) => networkCounts[d.network] > this.MINIMUM_THRESHOLD,
+      (d) => networkCounts[d.network] > this.MINIMUM_THRESHOLD
     );
 
     this.minDate = d3.min(filteredData, (d) => d.date).getTime();
@@ -64,9 +64,9 @@ class ByNetworkVisual {
   }
 
   updateByNetwork(data) {
-    const networks = Array.from(new Set(data.map((d) => d.network))).sort(
-      d3.ascending
-    );
+    const networks = Array.from(
+      new Set(data.map((d) => NETWORK_LOOKUP[d.network] || d.network))
+    ).sort(d3.ascending);
 
     const avgScores = d3
       .rollups(
@@ -82,7 +82,10 @@ class ByNetworkVisual {
 
     // Convert avgScores to a Map for easy lookup
     const scoreMap = new Map(
-      avgScores.map((d) => [`${d.network}_${d.party}`, d.avgScore])
+      avgScores.map((d) => [
+        `${NETWORK_LOOKUP[d.network] || d.network}_${d.party}`,
+        d.avgScore,
+      ])
     );
 
     // Function to get score for a network and party, defaults to 0
@@ -136,6 +139,15 @@ class ByNetworkVisual {
       .domain([0, d3.max(rightData)])
       .range([0, this.width]);
 
+    // Select the existing footnote if it exists
+    const existingFootnote = this.chart.select(".legend");
+
+    // If an existing footnote is found, remove it
+    if (existingFootnote) {
+      existingFootnote.remove();
+    }
+
+    // Define new footnote
     const footnote = this.chart.append("g").attr("class", "legend");
 
     footnote
@@ -143,7 +155,7 @@ class ByNetworkVisual {
       .attr("x", this.width - this.legendAreaBuffer * 1.5)
       .attr("y", 0.98 * this.height)
       .text(
-        `* includes networks with over ${this.MINIMUM_THRESHOLD.toLocaleString()} mentions`,
+        `* includes networks with over ${this.MINIMUM_THRESHOLD.toLocaleString()} mentions`
       )
       .style("font-size", "14px");
 
@@ -220,7 +232,7 @@ class ByNetworkVisual {
       .attr("dy", ".20em")
       .attr("text-anchor", "middle")
       .attr("class", "name")
-      .text((d) => NETWORK_LOOKUP[d] || d);
+      .text((d) => d);
   }
 
   addXAxisTitles() {
@@ -243,5 +255,3 @@ class ByNetworkVisual {
       .text("Republican");
   }
 }
-
-

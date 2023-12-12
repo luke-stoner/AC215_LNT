@@ -1,0 +1,82 @@
+/* Styles for dropdown */
+
+#bump-chart-selection {
+  width: auto;
+  text-align: center;
+}
+
+.dropdown-textfield {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.dropdown-textfield select {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f7f7f7;
+}
+
+h1 {
+  font-weight: 100;
+  margin-top: 50px;
+  color: #4B6D4A;
+}
+
+h1 sup {
+  font-size: 11px;
+  top: -18px;
+  font-weight: 400;
+  color: #5b835a;
+}
+
+h2 {
+  font-weight: 300;
+  font-size: 18px;
+  color: #91988B;
+  margin-bottom: 40px;
+}
+
+body {
+  background-color: whitesmoke;
+}
+
+.tooltip {
+  position: absolute;
+  text-align: left;
+  padding: 10px;
+  font: 14px sans-serif;
+  pointer-events: none;
+  background-color: rgba(255, 255, 255, 0.95); /* Adjust the opacity as needed */
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  box-shadow: 0 0 5px #999;
+  max-width: 250px;
+}
+
+/****************/
+/*  LINE CHART  */
+/****************/
+
+.axis path,
+.axis line {
+  fill: none;
+  shape-rendering: crispEdges;
+}
+
+.axis text {
+  font-size: 12px;
+}
+
+.line {
+  fill: none;
+  stroke-width: 3px;
+}
+
+
+
+

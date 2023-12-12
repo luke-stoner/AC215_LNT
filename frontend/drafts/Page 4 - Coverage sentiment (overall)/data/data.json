@@ -1,0 +1,8 @@
+[
+    {"name": "Biden", "avg_sentiment": ".62", "photo": "data/headshots/biden.png", "party":  "D"},
+    {"name": "Trump", "avg_sentiment": ".54", "photo": "data/headshots/trump.png", "party":  "R"},
+    {"name": "Ramaswamy", "avg_sentiment": ".32", "photo": "data/headshots/ramaswamy.png", "party":  "R"},
+    {"name": "Haley", "avg_sentiment": ".21", "photo": "data/headshots/haley.png", "party":  "R"},
+    {"name": "Williamson", "avg_sentiment": ".51", "photo": "data/headshots/williamson.png", "party":  "D"}
+]
+

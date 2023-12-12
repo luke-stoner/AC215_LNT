@@ -88,13 +88,34 @@ h3 {
   z-index: 1;
 }
 
+#election-intro p {
+  font-size: 18px;
+}
+
+#election-intro-content {
+  margin-top: 10px;
+}
+
+.form-check {
+  padding-bottom: 10px;
+}
+
+#avg-sentiment-container {
+  padding-top: 90px;
+}
+
 .tooltip {
   position: absolute;
   text-align: left;
   padding: 10px;
   font: 14px sans-serif;
   pointer-events: none;
-  background-color: rgba(255, 255, 255, 0.95); /* Adjust the opacity as needed */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.95
+  ); /* Adjust the opacity as needed */
   border: 1px solid #aaa;
   border-radius: 4px;
   box-shadow: 0 0 5px #999;
@@ -124,7 +145,7 @@ h3 {
 .dropdown-textfield {
   display: flex;
   align-items: center;
-  margin: 0;
+  padding-left: 20px;
 }
 
 .dropdown-textfield select {
@@ -132,15 +153,20 @@ h3 {
   margin-right: 5px;
 }
 
+#sbn-slider {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
 #sbfHeader {
-  padding-bottom: 30px;
+  padding-bottom: 40px;
 }
 
 /* Hiding video controls
 	* See: https://css-tricks.com/custom-controls-in-html5-video-full-screen/
   * See: https://github.com/alvarotrigo/fullPage.js/blob/master/examples/background-video.html
 	* --------------------------------------- */
-video::-webkit-media-controls {
+#myVideo::-webkit-media-controls {
   display: none !important;
 }
 
@@ -227,13 +253,25 @@ video::-webkit-media-controls {
 }
 
 #candidate-introduction,
-#media-analysis {
+#media-analysis,
+#white-house-introduction {
   border: solid;
   background: #f5f5f5;
 }
 
+#white-house-introduction p {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  font-size: x-large;
+  font-weight: bold;
+}
+
 .section {
   background-position: center;
+}
+
+#ack-content p {
+  font-size: 18px;
 }
 
 #section-3 {
@@ -253,7 +291,8 @@ video::-webkit-media-controls {
 }
 
 .redBlock {
-  background-color: #c90a3d;
+  /* background-color: #c90a3d; */
+  background-color: #e8d3a1;
 }
 
 .blueBlock {
@@ -337,13 +376,51 @@ video::-webkit-media-controls {
   }
 }
 
+#impact-event-intro {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
 #white-house {
-  height: 100%;
+  height: 80%;
   position: relative;
-  top: 30%;
+  top: 40%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(20px 5px 4px #a8a8a8);
+}
+
+#ballot-box {
+  height: 80%;
+  position: relative;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   filter: drop-shadow(20px 5px 4px #a8a8a8);
+}
+
+#breaking-news-image {
+  height: 60%;
+  position: relative;
+  top: 50%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(20px 5px 4px #a8a8a8);
+}
+
+.conclusion-list {
+  padding-top: 10px;
+  list-style-type: square;
+}
+.conclusion-list li {
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+#conclusion {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 #section-0 {
@@ -483,23 +560,12 @@ body {
   font-weight: 300;
   line-height: 23px;
   /*font-family: "Poppins", sans-serif;*/
-}
+/*}*/
 
 ul {
   list-style-type: none;
 }
 
-a,
-a:hover {
-  text-decoration: none;
-} */
-
-/*body {*/
-/*  font-family: "Montserrat", sans-serif;*/
-/*}*/
-body .testimonial {
-  padding: 100px 0;
-}
 body .testimonial .row .tabs {
   all: unset;
   margin-right: 50px;
@@ -637,8 +703,11 @@ body .testimonial .row .carousel .carousel-indicators li {
 }
 
 body .testimonial .row .carousel .carousel-indicators li.active {
-  background: #000; /* Darker color for the active indicator */
+  background: #000000; /* Darker color for the active indicator */
+  background-clip: padding-box;
+  height: 2px;
 }
+
 body .testimonial .row .carousel .carousel-inner .carousel-item .quote-wrapper {
   margin-top: 42px;
 }
@@ -692,7 +761,6 @@ body .testimonial .row .tabs li figure::before {
   background: rgba(255, 255, 255, 0.5); /* White overlay with opacity */
   border-radius: 50%; /* Adjust if needed to match the image border-radius */
   z-index: 1;
-  /*filter: blur(2px); !* Adding blur *!*/
 }
 
 body .testimonial .row .tabs li.active figure::before {
@@ -709,4 +777,442 @@ body .testimonial .row .tabs li.active figure::before {
 .custom-tooltip {
   --bs-tooltip-bg: #000000;
   --bs-tooltip-color: #ffffff;
+}
+
+/* .start of andrews last viz css */
+#impact-event-chart-area {
+  /*margin: 1.5rem;*/
+  /*!*border-radius: 5px;*!*/
+  /*background-color: #f5f5f5;*/
+  /*height: 600px;*/
+  /*text-align: center;*/
+  /*padding-top: 2rem;*/
+}
+
+.legend-section.row {
+  display: flex;
+  justify-content: space-between; /* This will space out the items evenly */
+  align-items: center;
+}
+
+.candidate_containers {
+  position: relative; /* Needed to position the text over the image */
+  /* Calculate width: 100% / 5 images per row - spacing */
+  /* Adjust '2%' to increase or decrease spacing between images */
+  width: calc(20% - 2%);
+  margin: 0 1%; /* Half of 2% on each side for equal spacing */
+  text-align: center; /* To center the images within the containers */
+}
+
+.candidate_containers img {
+  width: 100%; /* Make the image take the full width of its container */
+  height: auto; /* Keep the aspect ratio of the image */
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.9s ease; /* Smooth transition for enlarging the image */
+}
+
+.cursor-mouseover {
+  cursor: pointer;
+}
+
+.highlighted {
+  opacity: 1 !important;
+  stroke-width: 3px !important;
+}
+
+.dimmed {
+  opacity: 0.2;
+}
+
+#impact-event-chart-container {
+  margin-right: 40px;
+}
+
+#candidate-selections-box {
+  background-color: #dec9c9;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.legend-section {
+  background-color: whitesmoke;
+  border-radius: 5px;
+  margin-bottom: calc(1.5rem + 1px);
+  padding: 1rem;
+  padding-top: 0.5rem;
+}
+
+.blurred-image {
+  /*filter: blur(1px);*/
+  /*filter: grayscale(1);*/
+  filter: brightness(0.5);
+  background-color: #000000;
+  /*transition: transform 0.9s ease;*/
+  transition: opacity 0.3s; /* Smooth transition for fading in/out */
+  /*blur(10px);*/
+}
+
+.candidate_containers img:hover {
+  transform: scale(1.5); /* Enlarges the image to 110% of its size on hover */
+  /*filter: blur(1px);*/
+}
+
+.candidate_containers img.hovered {
+  transform: scale(1.5); /* Enlarges the image to 150% of its size */
+  /*filter: blur(1px);*/
+}
+
+.candidate-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.9s ease;
+  color: white;
+  text-shadow: black 0 0 5px;
+  font-size: 6px; /* Adjust size as needed */
+  visibility: hidden;
+  pointer-events: none; /* Prevents the text from interfering with image clicks */
+}
+.candidate_containers.hovered img {
+  transform: scale(1.5); /* Enlarges the image */
+  /*filter: blur(.3px);*/
+  /*filter: blur(1px);*/
+  box-shadow: inset white 0 0 3px;
+}
+
+#impact-event-chart-container {
+  padding-top: 20px;
+  padding-left: 140px;
+}
+
+.candidate_containers img:hover + .candidate-name {
+  transform: translate(-50%, -50%) scale(1.5); /* Scale up the text on hover */
+  visibility: visible;
+  text-shadow: black 0 0 3px;
+}
+.legend-item {
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tooltip-lastslide {
+  background-color: #fff;
+  border: 1px solid #d4d4d4;
+  padding: 5px;
+  border-radius: 5px;
+  pointer-events: none; /* Don't let the tooltip block cursor events */
+  position: absolute; /* Required for positioning */
+  opacity: 0; /* Start hidden */
+  transition: opacity 0.3s; /* Smooth transition for fading in/out */
+}
+
+#dynamic-chart-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bolder;
+  margin-bottom: 1rem;
+}
+
+.loading-spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Ensure it's above other content */
+  display: none; /* Hidden by default */
+}
+
+.spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#bump-chart-row {
+  padding-right: 20px;
+}
+
+
+#bumpchartcolumn {
+  text-align: center;
+}
+
+.datapoint-image {
+  border-radius: 50%;
+  /*//transform: scale(1.5);*/
+}
+
+canvas {
+  width: -webkit-fill-available !important;
+  max-width: -webkit-fill-available !important;
+}
+
+/*TELEVISION*/
+.tv {
+  width: 50%; /* Adjust as needed */
+  height: auto; /* Adjust as needed */
+  background-color: black; /* TV's outer color */
+  border-radius: 20px; /* Rounded corners for TV */
+  padding: 20px; /* Space for TV frame */
+  box-shadow: 0px 0px 10px 5px grey; /* Shadow for 3D effect */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3%;
+  z-index: 1;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+.tv-screen {
+  background: honeydew;
+}
+
+.tv-tooltip {
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  width: 400px;
+  max-height: 350px; /* Set the maximum height you desire */
+  overflow-y: auto; /* Add vertical scrollbar if content overflows */
+  pointer-events: none;
+  opacity: 1; /* Set the initial opacity to fully opaque */
+  padding: 10px;
+  padding-bottom: 20px;
+}
+
+#tv-desc {
+  padding: 10px;
+  font-size: 13.5px;
+}
+
+.tv-content {
+  width: 100%;
+  height: 100%;
+  background-color: white; /* Background for the content */
+  border-radius: 10px; /* Slightly rounded corners inside the TV */
+}
+/* Antennas on the top of the TV */
+.tv .antenna-left,
+.tv .antenna-right {
+  content: "";
+  position: absolute;
+  bottom: 97%; /* Position at the top of the TV */
+  background: black;
+}
+
+/* Left antenna */
+.tv .antenna-left {
+  right: 55%; /* Start from the middle and extend leftwards */
+  height: 65px; /* Adjust the height as needed */
+  width: 6px; /* Antenna thickness */
+  transform: rotate(-30deg); /* Angle to the left */
+}
+
+/* Right antenna */
+.tv .antenna-right {
+  left: 55%; /* Start from the middle and extend rightwards */
+  height: 65px; /* Adjust the height as needed */
+  width: 6px; /* Antenna thickness */
+  transform: rotate(30deg); /* Angle to the right */
+}
+
+/* Optional: Adding "legs" to the TV for a more realistic effect */
+.tv:before,
+.tv:after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  width: 50px;
+  height: 20px;
+  background: black;
+  z-index: -1;
+}
+
+.tv:before {
+  left: 50px;
+}
+
+.tv:after {
+  right: 50px;
+}
+
+.legend-section.row {
+  display: flex;
+  justify-content: space-between; /* This will space out the items evenly */
+  align-items: center;
+}
+
+.candidate_containers {
+  position: relative; /* Needed to position the text over the image */
+  /* Calculate width: 100% / 5 images per row - spacing */
+  /* Adjust '2%' to increase or decrease spacing between images */
+  width: calc(20% - 2%);
+  margin: 0 1%; /* Half of 2% on each side for equal spacing */
+  text-align: center; /* To center the images within the containers */
+}
+
+.candidate_containers img {
+  width: 100%; /* Make the image take the full width of its container */
+  height: auto; /* Keep the aspect ratio of the image */
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.9s ease; /* Smooth transition for enlarging the image */
+}
+
+.cursor-mouseover {
+  cursor: pointer;
+}
+
+.highlighted {
+  opacity: 1 !important;
+  stroke-width: 3px !important;
+}
+
+.dimmed {
+  opacity: 0.2;
+}
+
+#settings-icon{
+  max-width: -webkit-fill-available;
+}
+
+/*.title-area.col-10{*/
+/*  max-width: justify-content: ;*/
+/*}*/
+span.adjustments-title {
+  vertical-align: -webkit-baseline-middle;
+  /*padding-top: 0.5rem;*/
+}
+
+
+.adjustments-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#settingstitle {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#metric-legend-container {
+  padding-left: 15px;
+  padding-top: 22px;
+}
+
+#candidate-selections-box{
+  background-color: #E8D3A1FF;
+  /*background-color: #dec9c9;*/
+  border-radius: 5px;
+  text-align:center;
+  /*margin: 5%;*/
+  margin-top: 30px;
+  padding-top: 5px;
+  margin-bottom: 55px;
+}
+
+.legend-section {
+  background-color: rgba(255, 255, 255, .7);
+  border-radius: 5px;
+  margin-bottom: calc(1.5rem + 1px);
+  padding: 1rem;
+  padding-top: .5rem;
+}
+#legend-panel-row1 {
+  justify-content: center;
+}
+#legend-panel-row2 {
+  justify-content: center;
+}
+
+.blurred-image {
+  /*filter: blur(1px);*/
+  /*filter: grayscale(1);*/
+  filter: brightness(0.5);
+  background-color: #000000;
+  /*transition: transform 0.9s ease;*/
+  transition: opacity 0.3s; /* Smooth transition for fading in/out */
+  /*blur(10px);*/
+}
+
+.candidate_containers img:hover {
+  transform: scale(1.5); /* Enlarges the image to 110% of its size on hover */
+  /*filter: blur(1px);*/
+}
+
+.candidate_containers img.hovered {
+  transform: scale(1.5); /* Enlarges the image to 150% of its size */
+  /*filter: blur(1px);*/
+}
+
+
+.candidate-name {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.9s ease;
+  color: white;
+  text-shadow: black 0 0 5px;
+  font-size: 6px; /* Adjust size as needed */
+  visibility: hidden;
+  pointer-events: none; /* Prevents the text from interfering with image clicks */
+}
+.candidate_containers.hovered img {
+  transform: scale(1.5); /* Enlarges the image */
+  /*filter: blur(.3px);*/
+  /*filter: blur(1px);*/
+  box-shadow: inset white 0 0 3px;
+}
+
+
+.candidate_containers img:hover + .candidate-name {
+  transform: translate(-50%, -50%) scale(1.5); /* Scale up the text on hover */
+  visibility: visible;
+  text-shadow: black 0 0 3px;
+}
+.legend-item {
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tooltip-lastslide {
+  background-color: #fff;
+  border: 1px solid #d4d4d4;
+  padding: 5px;
+  border-radius: 5px;
+  pointer-events: none; /* Don't let the tooltip block cursor events */
+  position: absolute; /* Required for positioning */
+  opacity: 0; /* Start hidden */
+  transition: opacity 0.3s; /* Smooth transition for fading in/out */
+}
+
+#dynamic-chart-title{
+  text-align: center;
+  font-size: 20px;
+  font-weight: bolder;
+  margin-bottom: 1rem;
 }

@@ -1,22 +1,48 @@
+//DYNAMIC SIZING///
+bump_leftcol_pxls = parseFloat(d3.select('#bumpchartcolumn').style('width'));
+
+// Calculate the required total width
+let requiredSpaceForText = 110; // Width of the longest text element
+let totalWidth = bump_leftcol_pxls + requiredSpaceForText;
+
+// Adjust left margin to center the plot within the total width
+let margin_bump = {
+    top: 40,
+    right: (totalWidth - bump_leftcol_pxls) / 2 + 40,
+    bottom: 70,
+    left: (totalWidth - bump_leftcol_pxls) / 2 // Adjusted left margin
+};
+
+// Recalculate width_bump based on new margins
+let width_bump = bump_leftcol_pxls - margin_bump.left - margin_bump.right - 30;
+let height_bump = 500 - margin_bump.top - margin_bump.bottom;
+
+// Initialize SVG drawing space with updated width
+let svg_bump = d3
+    .select("#bump-chart-area")
+    .append("svg")
+    .attr("width", totalWidth) // Set to totalWidth
+    .attr("height", height_bump + margin_bump.top + margin_bump.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin_bump.left + "," + margin_bump.top + ")");
+
+// format percentage
+function formatAsPercentage(num) {
+    return new Intl.NumberFormat('default', {
+        style: 'percent',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+    }).format(num);
+}
+
+// Initialize data
+let data = []; // Initialize empty array
+
 // Load CSV file
 d3.csv("data/labeled.csv", row => {
     row.date = parseDate(row.date);
     return row
 }).then(csv => {
-
-    // Set margins, width, height
-    let margin = { top: 40, right: 40, bottom: 70, left: 60 };
-    let width = 900 - margin.left - margin.right;
-    let height = 600 - margin.top - margin.bottom;
-
-    // Initialize SVG drawing space
-    let svg = d3
-        .select("#bump-chart-area")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // format percentage
     function formatAsPercentage(num) {
@@ -31,11 +57,17 @@ d3.csv("data/labeled.csv", row => {
     let data = csv;
 
     // Define x and y scales and axes outside the updateVisualization function
-    const xScale = d3.scaleTime().range([30, width]);
-    const yScale = d3.scaleLinear().range([height, 0]);
+    const xScale = d3.scaleTime().range([30, width_bump]);
+    const yScale = d3.scaleLinear().range([height_bump, 0]);
 
-    const xAxis = svg.append('g').attr('transform', `translate(0,${height+30})`);
-    const yAxis = svg.append('g');
+    const xAxis = svg_bump.append('g').attr('transform', `translate(0,${height_bump+30})`);
+    const yAxis = svg_bump.append('g');
+
+    // Filter data to only include specified candidates consistently in the top ten of mentions
+    let selected_candidates = ['Biden', 'Trump', 'DeSantis', 'Haley', 'Ramaswamy', 'Scott', 'Pence', 'Christie']
+
+    // Set a color scale by candidate name
+    const colorScale = candidateColorMap;
 
     // call update visualization function
     updateVisualization()
@@ -46,17 +78,11 @@ d3.csv("data/labeled.csv", row => {
         updateVisualization();
     });
 
+
     function updateVisualization() {
+
         // Get the selected attribute from the dropdown
         let column = document.getElementById("bump-chart-selection").value;
-
-        // Filter data to only include specified candidates consistently in the top ten of mentions
-        let selected_candidates = ['Biden', 'Trump', 'DeSantis', 'Haley', 'Ramaswamy', 'Scott', 'Pence', 'Christie']
-
-        // Set a color scale by candidate name
-        const colorScale = d3.scaleOrdinal()
-            .domain(selected_candidates) // Use selected_candidates list to maintain consistency
-            .range(d3.schemeCategory10); // Using a categorical color scheme
 
         let filtered_data = data.filter((d) => selected_candidates.includes(d.last_name));
 
@@ -149,7 +175,7 @@ d3.csv("data/labeled.csv", row => {
         const maxRank = d3.max(rankedData, (d) => d.rank);
         const yRankScale = d3.scaleLinear()
             .domain([maxRank, 1])
-            .range([height, 0]);
+            .range([height_bump, 0]);
 
         // Update scales domain based on aggregatedData
         xScale.domain([
@@ -164,44 +190,55 @@ d3.csv("data/labeled.csv", row => {
             .y((d) => yRankScale(d.rank));
 
         // Draw lines based on the ranked data
-        svg
+        svg_bump
             .selectAll(".line")
             .data(nestedRankedData)
             .join('path')
             .attr("class", "line")
             .attr("d", (d) => line(d.values)) // Adjust to use 'values' directly
-            .style("stroke", (d) => colorScale(d.candidate)); // Use color scale for lines
+            .style("stroke", (d) => candidateColorMap[d.candidate.toLowerCase()]); // Use color scale for lines
 
         console.log(nestedRankedData);
+        let formatDateToMonthDay = d3.timeFormat("%m/%d");
 
         // Transition for x-axis and y-axis
         xAxis.transition().duration(500).call(d3.axisBottom(xScale).ticks(d3.timeWeek.every(num_weeks)));
-        yAxis.transition().duration(500).call(d3.axisLeft(yRankScale).ticks(8));
+        yAxis.transition().duration(500)
+            .call(d3.axisLeft(yRankScale)
+                .ticks(8)
+                .tickSize(8) // Adjust tick size as needed
+                .tickPadding(2) // Increase padding between ticks and text
+            )
+            .selectAll('path') // Select the axis line
+            .style('stroke-opacity', '0') // Make the y-axis line transparent
+
+        yAxis.selectAll('text') // Select all text elements
+            .style('font-size', '14px'); // Increase tick font size to 14
 
         // Remove existing axis titles
-        svg.selectAll(".axis-title").remove();
+        svg_bump.selectAll(".axis-title").remove();
 
         // Append y-axis title
-        svg.append("text")
+        svg_bump.append("text")
             .attr("class", "axis-title")
             .attr("transform", "rotate(-90)")
-            .attr("y",  -40) // Adjust position as needed
-            .attr("x", -height / 2)
+            .attr("y",  -45) // Adjust position as needed
+            .attr("x", -height_bump / 2)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("Ranking");
 
         // Append x-axis title
-        svg.append("text")
+        svg_bump.append("text")
             .attr("class", "axis-title")
-            .attr("x", width / 2)
-            .attr("y", height + 50) // Adjust position as needed
+            .attr("x", width_bump / 2 + 20)
+            .attr("y", height_bump + 50) // Adjust position as needed
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text("Date");
 
         // Update circles for data points
-        const points = svg.selectAll(".point-group").data(nestedRankedData);
+        const points = svg_bump.selectAll(".point-group").data(nestedRankedData);
 
         points.exit().remove();
 
@@ -210,7 +247,7 @@ d3.csv("data/labeled.csv", row => {
         const allPoints = newPoints.merge(points);
 
         // Define the size for candidate images
-        const imageSize = 40; // Adjust the size as needed
+        const imageSize = 35; // Adjust the size as needed
 
         const circles = allPoints
             .selectAll(".circles")
@@ -226,7 +263,13 @@ d3.csv("data/labeled.csv", row => {
             .attr("cx", (d) => xScale(d.date)) // Positioning aligned with image
             .attr("cy", (d) => yRankScale(d.rank)) // Positioning aligned with image
             .attr("r", imageSize / 1.5) // Adjust the radius to accommodate the image size and padding
-            .style("fill", (d) => d3.color(colorScale(d.candidate)).copy({opacity: 0.4}))
+            .style("fill", (d) => {
+                const originalColor = candidateColorMap[d.candidate.toLowerCase()];
+                const lighterColor = d3.interpolate(originalColor, "#f0f0f0")(0.6); // Adjust the second color value for the desired lightness
+                return lighterColor;
+              })
+            .style("stroke", (d) => candidateColorMap[d.candidate.toLowerCase()]) // Use color scale for stroke
+            .style("stroke-width", 5) // Use color scale for stroke
 
         // Update circles for data points to use candidate images
         const images = allPoints
@@ -238,13 +281,23 @@ d3.csv("data/labeled.csv", row => {
             .append("div")
             .attr("class", "tooltip");
 
-        let tooltip_values = []
-        if (column==='volume') {
-            tooltip_values = ['Number of Mentions: ', 'd.label']
-        }
-        else {
-            tooltip_values = ['Positive Mentions: ', 'formatAsPercentage(d.label)']
-        }
+        svg_bump.selectAll(".clip-path").remove();
+
+        // Create a clipping path for each circle
+        const clipPaths = allPoints
+            .selectAll(".clip-path")
+            .data((d) => d.values);
+
+        clipPaths.exit().remove();
+
+        clipPaths.enter()
+            .append("clipPath")
+            .attr("class", "clip-path")
+            .attr("id", (d, i) => `clip-${d.candidate}-${i}`)
+            .append("circle")
+            .attr("cx", (d) => xScale(d.date))
+            .attr("cy", (d) => yRankScale(d.rank))
+            .attr("r", imageSize / 2);  // Use the same radius as your circles
 
         images.exit().remove();
 
@@ -254,7 +307,7 @@ d3.csv("data/labeled.csv", row => {
             .merge(images)
             .attr("class", "datapoint-image")
             .attr("x", (d) => xScale(d.date) - imageSize / 2) // Adjust positioning as needed
-            .attr("y", (d) => yRankScale(d.rank) - imageSize / 2) // Adjust positioning as needed
+            .attr("y", (d) => yRankScale(d.rank) - imageSize / 2)//.attr("y", (d) => yRankScale(d.rank) - imageSize / 2) // Adjust positioning as needed
             .attr("width", imageSize)
             .attr("height", imageSize)
             .attr("xlink:href", (d) => {
@@ -262,47 +315,73 @@ d3.csv("data/labeled.csv", row => {
                 const candidate = nestedRankedData.find(candidate => candidate.candidate === d.candidate);
                 return candidate ? candidate.photo : ''; // Return the photo path or empty string if not found
             })
+            .attr("clip-path", (d, i) => `url(#clip-${d.candidate}-${i})`)
             .on("mouseover", function(event, d) {
+                // Decrease opacity of other lines
+                svg_bump.selectAll(".line")
+                    .style("opacity", function(lineData) {
+                        return lineData.candidate === d.candidate ? 1 : 0.2;
+                    });
+
+                // Decrease opacity of other circles' strokes
+                svg_bump.selectAll(".circles")
+                    .style("stroke-opacity", function(circleData) {
+                        return circleData.candidate === d.candidate ? 1 : 0.2;
+                    });
+
+                // Decrease opacity of other images
+                svg_bump.selectAll(".datapoint-image")
+                    .style("opacity", function(imageData) {
+                        return imageData.candidate === d.candidate ? 1 : 0.2;
+                    });
+
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                if (column==='volume') {
-                    tooltip.html(`${d.candidate}<br/>Number of Mentions: ${d.label}`)
-                        .style("left", (event.pageX + 12) + "px")
-                        .style("top", (event.pageY - 25) + "px");
-                }
-                else {
-                    tooltip.html(`${d.candidate}<br/>Positive Mentions: ${formatAsPercentage(d.label)}`)
-                        .style("left", (event.pageX + 12) + "px")
-                        .style("top", (event.pageY - 25) + "px");
-                }
+
+                    if (column === "volume") {
+                        tooltip
+                          .html(
+                            `<div style="text-align: center; font-weight: bold;">
+                                                  ${d.candidate}
+                                               </div>
+                                              Number of Mentions: ${d.label.toLocaleString()}`
+                          )
+                          .style("left", event.pageX + 12 + "px")
+                          .style("top", event.pageY - 25 + "px");
+                      } else {
+                        tooltip
+                          .html(
+                            `<div style="text-align: center; font-weight: bold;">
+                                  ${d.candidate}
+                               </div>
+                               Positive Mentions: ${formatAsPercentage(d.label)}`
+                          )
+                          .style("left", event.pageX + 12 + "px")
+                          .style("top", event.pageY - 25 + "px");
+                      }
             })
             .on("mouseout", function(d) {
+                // Restore opacity of all lines on mouseout
+                svg_bump.selectAll(".line")
+                    .style("opacity", 1);
+
+                // Restore opacity of all circles' strokes on mouseout
+                svg_bump.selectAll(".circles")
+                    .style("stroke-opacity", 1);
+
+                // Restore opacity of all circles' strokes on mouseout
+                svg_bump.selectAll(".datapoint-image")
+                    .style("opacity", 1);
+
+                // Rest of your tooltip code for mouseout
                 tooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
-            })
-
-        const rings = allPoints
-            .selectAll(".rings")
-            .data((d) => d.values); // Ensure data is correctly bound using 'values'
-
-        rings.exit().remove();
-
-        rings
-            .enter()
-            .append("circle")
-            .merge(circles)
-            .attr("class", "circles") // Updated class name to 'circles'
-            .attr("cx", (d) => xScale(d.date)) // Positioning aligned with image
-            .attr("cy", (d) => yRankScale(d.rank)) // Positioning aligned with image
-            .attr("r", imageSize / 1.5) // Adjust the radius to accommodate the image size and padding
-            .style("fill", "none")
-            .style("stroke", (d) => colorScale(d.candidate)) // Use color scale for stroke
-            .style("stroke-width", 5)
+            });
 
         // Select and update lines for data points
-        const lines = svg.selectAll(".line").data(nestedRankedData);
+        const lines = svg_bump.selectAll(".line").data(nestedRankedData);
 
         lines.exit().remove();
 
@@ -314,8 +393,24 @@ d3.csv("data/labeled.csv", row => {
             .transition()
             .duration(500)
             .attr("d", (d) => line(d.values)) // Adjust to use 'values' directly
-            .style("stroke", (d) => colorScale(d.candidate)) // Use color scale for lines
+            .style("stroke", (d) => candidateColorMap[d.candidate.toLowerCase()]) // Use color scale for lines
+            .style("stroke-width", 5)
             .style("opacity", 1); // Adjust opacity as needed
 
+        svg_bump.selectAll(".cand_labels").remove();
+        // Append text labels at the end of each line
+        nestedRankedData.forEach(candidateData => {
+            const lastDataPoint = candidateData.values[candidateData.values.length - 1];
+            svg_bump.append("text")
+                .attr("x", xScale(lastDataPoint.date) + 40) // Adjust this value as needed
+                .attr("y", yRankScale(lastDataPoint.rank))
+                .attr("class", "cand_labels")
+                .text(candidateData.candidate)
+                .style("fill", candidateColorMap[candidateData.candidate.toLowerCase()])
+                .style("font-weight", "bold")
+                .style("font-size", "18px")
+                .style("text-anchor", "start")
+                .style("alignment-baseline", "middle");
+        });
     }
 })
