@@ -186,9 +186,17 @@ After testing the API and frontend locally and ensuring proper functionality, it
 Kubernetes Engine to create and serve the cluster. This time, we found it easier to create the cluster using the command line rather than GCP's UI. The code below
 provides an example of how to create a basic cluster:
 
+```
 gcloud container clusters create cluster-name \
-  --zone=your-preferred-zone \
+  --zone=us-central1 \
   --machine-type=n1-standard-2 \
   --num-nodes=3
+```
+If the cluster was successfully created, Google Kubernetes Engine will look something like this:
+
+<img width="891" alt="Screenshot 2023-12-12 at 5 20 35 PM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/1b271f10-9b5f-486c-bb78-b0761567b3ae">
+
+Once the cluster is created, the `scaling` directory in our repo provides the necessary .yaml files and Docker files to deploy the API and frontend to the cluster.
+Simply run `sh docker-shell.sh`, replacing project ID and cluster name as necessary, to deploy to your cluster.
 
 
