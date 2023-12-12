@@ -5,7 +5,6 @@ import os
 from sklearn.model_selection import train_test_split
 import torch
 from torch.utils.data import DataLoader, TensorDataset
-from torch.nn.functional import softmax
 from torch.optim import AdamW
 from google.cloud import storage 
 import io
@@ -22,6 +21,7 @@ OUTPUT_FILEPATH = 'processed/labeled.csv'
 MODEL_DIR_FINETUNE = 'fine_tune_label'
 WANDB_FILE = 'secrets/wandb.txt'
 
+# Declare model specifications
 TEST_SIZE = 0.3
 NUMBER_EPOCHS = 10
 RANDOM_STATE = 215
@@ -72,7 +72,6 @@ wandb.init(
     "epochs": NUMBER_EPOCHS,
     }
 )
-
 
 def get_model(model_name):
     """

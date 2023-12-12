@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Build docker image
 docker build -t lus881/lnt-frontend --platform=linux/amd64/v2 -f Dockerfile .
 
