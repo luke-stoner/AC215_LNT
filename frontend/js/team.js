@@ -69,6 +69,14 @@ const teamMembers = [
     "https://github.com/andrewsully",
     "https://media.licdn.com/dms/image/C4D03AQFcwzfZoC8I6g/profile-displayphoto-shrink_400_400/0/1620667606933?e=1705536000&v=beta&t=g8qIOwJFPNefHGwf-mCi3YODQJHJOhSyFctg1nIct5g",
   ),
+  new TeamMember(
+    "Kane Norman",
+    "Harvard University",
+    "MS - Data Science '23",
+    "https://www.linkedin.com/in/kanenorman/",
+    "https://github.com/kanenorman",
+    "https://media.licdn.com/dms/image/D4E03AQGbvPkUI-QUpA/profile-displayphoto-shrink_400_400/0/1676916845284?e=1705536000&v=beta&t=kwoJyxVsjNtTxP9_N4qsh6DRxtFOt3_lOoipqi6-Wac",
+  ),
 ];
 
 const teamProfilesDiv = document.getElementById("team-profiles");
