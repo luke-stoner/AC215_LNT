@@ -194,9 +194,13 @@ gcloud container clusters create cluster-name \
 ```
 If the cluster was successfully created, Google Kubernetes Engine will look something like this:
 
-<img width="891" alt="Screenshot 2023-12-12 at 5 20 35 PM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/1b271f10-9b5f-486c-bb78-b0761567b3ae">
+<img width="600" alt="Screenshot 2023-12-12 at 5 20 35 PM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/1b271f10-9b5f-486c-bb78-b0761567b3ae">
 
 Once the cluster is created, the `scaling` directory in our repo provides the necessary .yaml files and Docker files to deploy the API and frontend to the cluster.
 Simply run `sh docker-shell.sh`, replacing project ID and cluster name as necessary, to deploy to your cluster.
+
+### Continuous Deployment via Github Actions
+
+Lastly, with our model deployed to Vertex AI and app services deployed to Kubernetes, we need to 
 
 
