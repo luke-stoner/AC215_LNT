@@ -116,6 +116,21 @@ GCP Bucket Structure:
                 └── summaries.csv
                 └── keywords.csv
 
---------
+------------
+
+
+Data Description:
+------------
+`labeled.csv` data fields:
+
+- first_name: The first name of the mentioned candidate
+- last_name: The last name of the mentioned candidate
+- party: Abbreviation for the political party of the mentioned candidate
+- network: The network the mention occurred on
+- date: The date on which the clip aired
+- text: Cleaned and cropped closed caption text of the mention
+- negative_score: The confidence in which the model would predict the text is negative 
+- positive_score: The confidence in which the model would predict the text is positive
+- label: Final sentiment label of the mention (0=negative, 1=positive)
 
 
