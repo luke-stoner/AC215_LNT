@@ -166,5 +166,16 @@ like the below image on Vertex:
 
 <img width="421" alt="Screenshot 2023-12-12 at 4 54 22 PM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/100fe4e2-084c-4222-87f1-b0f330b8da52">
 
+### API and Frontend
 
+The `api-service` and `frontend` directories make use of our newly created dataset and deployed model. The Docker files in each container specify how each should
+be deployed to their respective servers. The API is run on Uvicorn server, while our frontend uses NGINX. We recommend attempting to build a run these containers
+locally first before pushing to DockerHub. Additionally, most of these files make use of Github Actions secrets; make necessary changes to enure make sure the 
+containers run locally first.
 
+We also recommend exploring and making edits to our `index.html` file and our `js` directory, which create the visualizations for our frontend. Here are some examples 
+of our candidate and network visualizations:
+
+<img width="1293" alt="Screenshot 2023-12-12 at 12 34 53 AM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/d6dcc01a-51f3-4087-a511-a459fe733ed2">
+
+<img width="845" alt="Screenshot 2023-12-12 at 12 33 55 AM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/8cabda0b-dd1c-4b32-8edb-a3b18089121e">
