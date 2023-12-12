@@ -10,16 +10,19 @@ GitHub File Structure:
       ├── README.md
       ├── api-service                      #Fetches current labeled data and saves to persistent disk
             ├── api
-            │   ├── fetch_data.py          #Fetches data
-            │   ├── service.py             #Creates FastAPI server
+            │   ├── scrape_and_label.py          #Scrapes data from Internet Archive and uses Vertex endpoint to provide sentiment label
+            │   ├── service.py                   #Creates FastAPI server
+            |   └── sync_data.sh                 #Syncs newest labeled.csv file with data folder in frontend
             ├── Dockerfile
             ├── docker-shell.sh
             ├── docker-entrypoint.sh 
+            ├── docker-push.sh 
             ├── Pipfile
             ├── pipfile.lock
       ├── frontend                         #Uses html/css/js structure to create user friendly frontend
             ├── Dockerfile
             ├── docker-shell.sh
+            ├── docker-push.sh
             ├── index.html                 #Html file that calls all necessary css/js files and structures webapp
             ├── css
             │   ├── style.css
@@ -31,8 +34,15 @@ GitHub File Structure:
             │   ├── ...
             ├── js                         #Contains all js files that are used to create visualizations
             │   ├── ...
+      ├── scaling                          #Stores all yaml and docker files necessary for kubernetes deployment of our api and frontend
+            ├── frontend-deployment.yaml    
+            ├── frontend-service.yaml  
+            ├── api-deployment.yaml  
+            ├── api-service.yaml  
+            ├── Dockerfile
+            ├── docker-shell.sh   
       └── src
-            ├── label                      #Takes in unlabeled candidate mentions and provides sentiment label
+            ├── label                      #Defines our sentiment analysis model to later be deployed in our deploy container
             │   ├── Dockerfile
             │   ├── label.ipynb
             │   ├── label.py
@@ -42,12 +52,18 @@ GitHub File Structure:
             │   ├── scrape.ipynb
             │   ├── scrape.py
             │   └── requirements.txt
-            └── summarize                  #Randomly samples candidate mentions to create summaries and extract keywords
+            ├── summarize                  #Randomly samples candidate mentions to create summaries and extract keywords
+            |   ├── Dockerfile
+            |   ├── keywords.ipynb
+            |   ├── keywords.py
+            |   ├── summarize.ipynb
+            |   └── requirements.txt
+            └── deploy                     #Creates a flask app using or model to take in text input and return negative/positive sentiment scores
                 ├── Dockerfile
-                ├── keywords.ipynb
-                ├── keywords.py
-                ├── summarize.ipynb
-                └── requirements.txt
+                ├── docker-push.sh
+                ├── pyproject.toml
+                ├── requirements.txt
+                └── test.py                #Basic script to test function of vertex endpoint
 --------
 
 **Solution Architechture**
