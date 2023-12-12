@@ -153,4 +153,18 @@ workbench to craft our jupyter notebooks and initalize the model
 Once a final model is created, it should be stored in a GCP Storage Bucket to be accessed by the deployment app. `App.py` in our deploy container
 specifies a Flask app that takes text instances as input, then imports the model from GCP to provide all text a postive and negative sentiment score.
 
-With this app created and containerized, upload the docker image to Google Artifact Registry. 
+With this app created and containerized, upload the docker image to Google Artifact Registry. Next, go to https://console.cloud.google.com/vertex-ai/ 
+and complete the following in Vertex AI's UI:
+- Navigate to Model Registry and click import to create a model based on our docker image
+- Upon importing the model, be sure that the predict and health paths match those of the Flask app
+- Once the model is successfully deployed, click on it and navigate to Deploy and Test -> Deploy to Endpoint
+- Specify necessary compute resources for the endpoint, we recommend including a GPU accelerator for labeling
+
+On completion of those steps, the Vertex AI endpoint should be active and ready to return predictions. 
+`Test.py` in our deploy container is useful for testing the effectiveness of the endpoint. If eveything is working properly, you should see something 
+like the below image on Vertex:
+
+<img width="421" alt="Screenshot 2023-12-12 at 4 54 22 PM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/100fe4e2-084c-4222-87f1-b0f330b8da52">
+
+
+
