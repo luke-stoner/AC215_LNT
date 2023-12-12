@@ -176,6 +176,6 @@ containers run locally first.
 We also recommend exploring and making edits to our `index.html` file and our `js` directory, which create the visualizations for our frontend. Here are some examples 
 of our candidate and network visualizations:
 
-<img width="1293" alt="Screenshot 2023-12-12 at 12 34 53 AM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/d6dcc01a-51f3-4087-a511-a459fe733ed2">
+<img width="600" alt="Screenshot 2023-12-12 at 12 34 53 AM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/d6dcc01a-51f3-4087-a511-a459fe733ed2">
 
-<img width="845" alt="Screenshot 2023-12-12 at 12 33 55 AM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/8cabda0b-dd1c-4b32-8edb-a3b18089121e">
+<img width="600" alt="Screenshot 2023-12-12 at 12 33 55 AM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/8cabda0b-dd1c-4b32-8edb-a3b18089121e">
