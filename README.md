@@ -74,49 +74,32 @@ GitHub File Structure:
           
 **API-Service Container**
 - Uses FastAPI to create API Server
-- Fetches most recent labeled.csv file from GCP Data Bucket on webapp startup
-- Labeled data is then stored in persistent folder
+- Scrapes data weekly from the Internet Archive and accesses our Vertex endpoint to label newly scraped data
+- Process is automated via cron jobs
+- New labeled data is pushed to both Google Cloud Storage and our frontend data folder
 
 **Frontend Container**
 - Takes labeled.csv as input to produce scrollable visualization story 
 - Uses javascript and D3 library to create interactive, costumizeable visualizations
-- Will be continuously updated over the next 2-3 weeks
-- **Frontend External IP:** http://34.69.165.89/
-- [Design Outline File](https://docs.google.com/document/d/1Vavxabj-kkGo9ALUjU2Ao9aGbNjiCtj-P8-gV8lmH-I/edit?usp=sharing) 
+- Continuously updated on Sunday each week
+- We recommend visiting our frontend using Chrome or Firefox for best performance
+- **Frontend External IP:** http://34.122.185.215/
+
+**Scaling Container**
+- Handles the deployment of our frontend and api-service to our Kubernetes Cluster
+- Contains yaml files for deployment and services
+- Dockerfile and docker-shell.sh automate deployment process for future use in Github Actions
                 
 **Scrape Container**
 - Scrapes specified data from Internet Archive and cleans/crops text to desired length
 - Input to this container is a candidates.csv file listing each presidential candidate
 - Output from this container is a csv file titled 'raw/unlabled.csv' stored in the data bucket on GCP
 
-(1) `scrape.py & scrape.ipynb` - Runs data scraping through selenium and cleans/crops text
-
-(2) `requirements.txt`
-
-(3) `Dockerfile`
-
 **Label Container**
-- Manages the labeling of data using updated models and methods
+- Manages the labeling of unlabeled.csv file
 - label.py and label.ipynb handle the labeling logic --> Uses pre-trained RoBERTa model 'siebert/sentiment-roberta-large-english'
-- Fine tunes the pre-trained BERT model using hand labeled data
+- Fine tunes the pre-trained BERT model using hand-labeled data
 - Output from this container is first a csv file titled 'processed/labeled.csv' in our GCP data bucket, as well as the saved final model 'fine_tune_label' in our model's bucket on GCP
-  
-(1) `label.ipynb & label.py` - Takes unlabeled data are provides a sentiment label (0 or 1) through pre-trained RoBERTa model
-
-(2) `Dockerfile` 
-
-(3) `requirements.txt`
-
-**Summarize Container**
-- Summarizes text data
-
-(1) `keywords.ipynb & keywords.py` - 
-
-(2) `summarize.ipynb` 
-
-(3) `Dockerfile`
-
-(4) `requirements.txt`
 
 
 GCP Bucket Structure:
@@ -138,24 +121,3 @@ GCP Bucket Structure:
 --------
 
 
-**models-lnt**
-- Bucket hosted on GCP for models
-
-(1) `fine_tune_label` - Fine-tuned BERT model 
-
-(2) `summarize` -  Model that summarizes weekly news per candidate
-
-**data-lnt**
-- Bucket hosted on GCP gathering our scraped data
-
-(1) `raw/unlabeled.csv` - Unlabeled data (updated weekly) to be passed into `fine_tune_label` model
-
-(2) `raw/hand_labeled.csv` - Hand-labeled sample data to to train model
-
-(3) `raw/candidates.csv` - candidate info
-
-(4) `processed/labeled.csv` -  Final labeled data from fine-tuned BERT model (updated weekly) derived from `fine_tune_label` model
-
-(5) `processed/summaries.csv` - Candidate summaries (updated weekly) derived from `bert_summarize` model
-
-(6) `processed/keywords.csv` - CKeywords derived from `bert_summarize` model
