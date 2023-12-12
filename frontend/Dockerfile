@@ -1,19 +1,14 @@
-FROM node:14.9.0-buster-slim
+# Use a base image with NGINX
+FROM nginx:latest
 
-# Update baseline and ensure we don't run the app as root.
-RUN set -ex; \
-    apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends openssl && \
-    npm install -g http-server && \
-    useradd -ms /bin/bash app -d /home/app -G sudo -u 2000 -p "$(openssl passwd -1 Passw0rd)" && \
-    mkdir -p /app && \
-    chown app:app /app
+# Set the working directory within the container
+WORKDIR /usr/share/nginx/html
 
-EXPOSE 8080
+# Copy the contents of the frontend directory to the container
+COPY . .
 
-# Switch to the new user
-USER app
-WORKDIR /app
+# Expose port 80 (NGINX default port)
+EXPOSE 80
 
-ENTRYPOINT ["/bin/bash"]
+# Command to start NGINX within the container
+CMD ["nginx", "-g", "daemon off;"]

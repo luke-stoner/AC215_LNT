@@ -21,8 +21,7 @@ from google.protobuf.struct_pb2 import Value
 import os
 
 # Set google application credentials
-secrets_path = '~/secrets/ac215.json'
-secrets_path = os.path.expanduser(secrets_path) 
+secrets_path = '/secrets/ac215.json'
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = secrets_path
 
 """

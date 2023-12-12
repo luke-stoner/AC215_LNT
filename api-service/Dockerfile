@@ -1,56 +1,44 @@
 # Use the official Debian-hosted Python image
 FROM python:3.9-slim-buster
 
-ARG DEBIAN_PACKAGES="build-essential git"
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    PYENV_SHELL=/bin/bash \
+    PYTHONUNBUFFERED=1
 
-# Prevent apt from showing prompts
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Python wants UTF-8 locale
-ENV LANG=C.UTF-8
-
-# Tell pipenv where the shell is. This allows us to use "pipenv shell" as a
-# container entry point.
-ENV PYENV_SHELL=/bin/bash
-
-# Tell Python to disable buffering so we don't lose any logs.
-ENV PYTHONUNBUFFERED=1
-
-# Ensure we have an up to date baseline, install dependencies and
-# create a user so we don't run the app as root
+# Install required packages and create necessary directories
 RUN set -ex; \
-    for i in $(seq 1 8); do mkdir -p "/usr/share/man/man${i}"; done && \
     apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends $DEBIAN_PACKAGES && \
+    apt-get install -y --no-install-recommends build-essential git chromium-driver cron && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    pip install --no-cache-dir --upgrade pip && \
-    pip install pipenv && \
+    pip install --no-cache-dir --upgrade pip pipenv && \
     useradd -ms /bin/bash app -d /home/app -u 1000 -p "$(openssl passwd -1 Passw0rd)" && \
-    mkdir -p /app && \
-    mkdir -p /persistent && \
-    chown app:app /persistent && \
-    chown app:app /app
+    mkdir -p /app /persistent && \
+    chown app:app /persistent /app
 
-# Install chromedriver and its dependencies
-RUN apt-get install -y chromium-driver
-
-# Expose port of API service
-EXPOSE 9000
-
-# Switch to the new user
+# Set user and working directory
 USER app
 WORKDIR /app
 
-# Install python packages
+# Install Python packages
 ADD --chown=app:app Pipfile Pipfile.lock /app/
-
 RUN pipenv sync
 
-# Add the rest of the source code. This is done last so we don't invalidate all
-# layers when we change a line of code.
+# Add the source code
 ADD --chown=app:app . /app
 
-# Entry point
-ENTRYPOINT ["/bin/bash","./docker-entrypoint.sh"]
+# Copy the sync script and scrape script to the container
+COPY api/sync_script.sh /app/api/sync_script.sh
+COPY api/scrape_and_label.py /app/api/scrape_and_label.py
+
+# Add the cron job schedules
+RUN echo "0 18 * * 0 /usr/bin/python /app/api/scrape_and_label.py" | crontab - && \
+    echo "0 21 * * 0 /usr/bin/bash /app/api/sync_script.sh" | crontab -
+
+# Define the entrypoint
+ENTRYPOINT ["/bin/bash", "./docker-entrypoint.sh"]
+
+# Start cron service and run the entrypoint script
+CMD ["cron", "-f"]
