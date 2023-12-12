@@ -67,11 +67,11 @@ GitHub File Structure:
 --------
 
 **Solution Architechture**
-<img width="917" alt="SolutionArchitecture" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/2c4a2c59-cf0e-4944-8dc9-5dd00bec1eac">
+<img width="848" alt="Screenshot 2023-12-12 at 5 42 33 PM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/236c8d03-73f5-40f0-86a9-6f307b4a746b">
 
 **Technical Architechture**
-<img width="913" alt="TechnicalArchitechture" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/1cf9e0d6-67af-4c4d-9d2f-f43730042100">
-          
+<img width="872" alt="Screenshot 2023-12-12 at 5 43 05 PM" src="https://github.com/luke-stoner/AC215_LNT/assets/146034759/8bc736b6-156a-4c40-9cb7-5eb3208375ef">
+
 **API-Service Container**
 - Uses FastAPI to create API Server
 - Scrapes data weekly from the Internet Archive and accesses our Vertex endpoint to label newly scraped data
