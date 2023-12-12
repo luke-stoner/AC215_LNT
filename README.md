@@ -8,7 +8,10 @@ GitHub File Structure:
 
       ├── LICENSE
       ├── README.md
-      ├── api-service                      #Fetches current labeled data and saves to persistent disk
+      ├── .github/workflows                #Handles the continuos deployment of model and API/frontend
+            ├── vertex.yml                 #Redeploys model
+            └── kubernetes.yml             #Redeploys frontend
+      ├── api-service                      #Updates labeled.csv data automatically each week
             ├── api
             │   ├── scrape_and_label.py          #Scrapes data from Internet Archive and uses Vertex endpoint to provide sentiment label
             │   ├── service.py                   #Creates FastAPI server
@@ -217,7 +220,6 @@ The two workflows are described below.
 
 With these two workflows, we first ensure that our endpoint always makes use the most up to date version of sentiment analysis model. Additionally, we ensure that end users
 always have access to the most recent version of our web app.
-
 
 License and Disclaimer:
 -------------
