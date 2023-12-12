@@ -33,6 +33,12 @@ ADD --chown=app:app . /app
 COPY api/sync_script.sh /app/api/sync_script.sh
 COPY api/scrape_and_label.py /app/api/scrape_and_label.py
 
+# Copy the GCP key into the container
+COPY gcp-key.json /app/secrets/gcp-key.json
+
+# Set environment variable for GCP key
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/secrets/gcp-key.json
+
 # Add the cron job schedules
 RUN echo "0 18 * * 0 /usr/bin/python /app/api/scrape_and_label.py" | crontab - && \
     echo "0 21 * * 0 /usr/bin/bash /app/api/sync_script.sh" | crontab -
